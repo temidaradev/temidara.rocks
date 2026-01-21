@@ -1,0 +1,12 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary: #ff69b4;
+    --secondary: #9d72ff;
+    --background: #1a1a2e;
+}

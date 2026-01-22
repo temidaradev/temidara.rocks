@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos_router::hooks::use_location;
 
 #[derive(Clone)]
 struct Tab {
@@ -9,6 +10,7 @@ struct Tab {
 #[component]
 pub fn NavBar() -> impl IntoView {
     let (menu_open, set_menu_open) = signal(false);
+    let location = use_location();
 
     let tabs = [
         Tab {
@@ -17,7 +19,7 @@ pub fn NavBar() -> impl IntoView {
         },
         Tab {
             name: "Experiences",
-            link: "/expriences",
+            link: "/experiences",
         },
         Tab {
             name: "Contact",
@@ -28,13 +30,15 @@ pub fn NavBar() -> impl IntoView {
     let toggle_menu = move |_| set_menu_open.update(|n| *n = !*n);
 
     view! {
-        <header class="fixed z-50 top-0 w-full glass transition-all duration-300 border-b border-white/5">
+        <header class="fixed z-50 top-0 w-full glass border-none transition-all duration-300">
             <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
                 <a href="/" class="group flex items-center gap-2">
                     <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary hover:from-secondary hover:to-primary transition-all duration-500">
                         "temidaradev"
                     </span>
-                    <span class="text-xs font-mono text-muted group-hover:text-primary transition-colors duration-300">"~/"</span>
+                    <span class="text-xs font-mono text-muted group-hover:text-primary transition-colors duration-300">
+                        {move || format!("~{}", location.pathname.get())}
+                    </span>
                 </a>
 
                 <button
@@ -68,7 +72,7 @@ pub fn NavBar() -> impl IntoView {
 
             {move || if menu_open.get() {
                 view! {
-                    <div class="lg:hidden absolute w-full bg-background/95 border-b border-primary/20 backdrop-blur-lg shadow-lg shadow-primary/10 animate-fade-in-down z-20">
+                    <div class="lg:hidden absolute w-full bg-background/95 backdrop-blur-lg shadow-lg shadow-primary/10 animate-fade-in-down z-20">
                         <nav class="flex flex-col p-4">
                             {tabs.iter().map(|tab| {
                                 view! {

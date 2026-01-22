@@ -1,27 +1,30 @@
-# temidaradev-rust
-My website but written in rust instead of svelte kit
+# Temidaradev Portfolio (Rust)
 
-## Executing a Server on a Remote Machine Without the Toolchain
-After running a `cargo leptos build --release` the minimum files needed are:
+A personal portfolio website built with Rust, Leptos, and TailwindCSS.
 
-1. The server binary located in `target/server/release`
-2. The `site` directory and all files within located in `target/site`
+## Project Structure
 
-Copy these files to your remote server. The directory structure should be:
-```text
-temidaradev-rust
-site/
+- `src/main.rs`: Entry point for the server-side rendering (SSR) application.
+- `src/lib.rs`: Library entry point, handles hydration for the client-side.
+- `src/app.rs`: Main application component, establishes the router and layout.
+- `src/pages/`: Contains individual page components.
+    - `home.rs`: The landing page with the hero section and Plex integration.
+    - `blog.rs`, `contact.rs`, `experiences.rs`: Placeholder modules for future content.
+- `src/components/`: Reusable UI components (NavBar, Cards, etc.).
+- `src/api/`: Backend API integrations (e.g., Plex).
+
+## Usage
+
+### Prerequisites
+- Rust (latest stable)
+- `cargo-leptos`
+
+### Running Development Server
+```bash
+cargo leptos watch
 ```
-Set the following environment variables (updating for your project as needed):
-```sh
-export LEPTOS_OUTPUT_NAME="temidaradev-rust"
-export LEPTOS_SITE_ROOT="site"
-export LEPTOS_SITE_PKG_DIR="pkg"
-export LEPTOS_SITE_ADDR="127.0.0.1:3000"
-export LEPTOS_RELOAD_PORT="3001"
+
+### Building for Release
+```bash
+cargo leptos build --release
 ```
-Finally, run the server binary.
-
-## Licensing
-
-This template itself is released under the Unlicense. You should replace the LICENSE for your own application with an appropriate license if you plan to release it publicly.

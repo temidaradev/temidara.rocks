@@ -7,10 +7,12 @@ use tailwind_fuse::*;
 #[derive(TwVariant, EnumString)]
 #[strum(serialize_all = "lowercase")]
 pub enum Variant {
-    #[tw(default, class = "text-slate-900 dark:text-slate-100")]
+    #[tw(default, class = "text-foreground")]
     Default,
-    #[tw(class = "text-slate-500 dark:text-slate-400")]
+    #[tw(class = "text-muted")]
     Dimmed,
+    #[tw(class = "text-gradient font-extrabold tracking-tight")]
+    Gradient,
 }
 
 #[derive(TwVariant, EnumString)]

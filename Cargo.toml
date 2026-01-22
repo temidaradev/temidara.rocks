@@ -17,6 +17,7 @@ tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
 wasm-bindgen = { version = "0.2.106", optional = true }
 tailwind_fuse = { version = "0.3.2", features = ["variant"]}
 strum = { version = "0.27.2", features = ["derive"] }
+web-sys = { version = "0.3.85", features = ["MouseEvent"] }
 
 [features]
 hydrate = [

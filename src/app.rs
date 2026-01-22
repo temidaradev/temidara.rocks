@@ -19,6 +19,14 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <AutoReload options=options.clone() />
                 <HydrationScripts options/>
                 <MetaTags/>
+                {
+                    match (std::env::var("UMAMI_SCRIPT_URL"), std::env::var("UMAMI_WEBSITE_ID")) {
+                        (Ok(url), Ok(id)) if !url.is_empty() && !id.is_empty() => view! {
+                             <script defer src=url data-website-id=id></script>
+                        }.into_view(),
+                        _ => ().into_view()
+                    }
+                }
             </head>
             <body class="bg-background text-foreground relative">
                 <App/>

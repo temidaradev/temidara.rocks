@@ -18,6 +18,12 @@ wasm-bindgen = { version = "0.2.106", optional = true }
 tailwind_fuse = { version = "0.3.2", features = ["variant"]}
 strum = { version = "0.27.2", features = ["derive"] }
 web-sys = { version = "0.3.85", features = ["MouseEvent"] }
+reqwest = { version = "0.12", features = ["json"], optional = true }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", optional = true }
+dotenvy = { version = "0.15", optional = true }
+pulldown-cmark = "0.13.0"
+lettre = { version = "0.11", default-features = false, features = ["tokio1", "tokio1-rustls", "smtp-transport", "builder", "rustls-tls"], optional = true }
 
 [features]
 hydrate = [
@@ -32,6 +38,10 @@ ssr = [
     "leptos/ssr",
     "leptos_meta/ssr",
     "leptos_router/ssr",
+    "dep:reqwest",
+    "dep:dotenvy",
+    "dep:serde_json",
+    "dep:lettre",
 ]
 
 # Defines a size-optimized profile for the WASM bundle in release mode
@@ -62,10 +72,10 @@ tailwind-input-file = "input.css"
 assets-dir = "public"
 
 # The IP and port (ex: 127.0.0.1:3000) where the server serves the content. Use it in your server setup.
-site-addr = "127.0.0.1:3000"
+site-addr = "127.0.0.1:3004"
 
 # The port to use for automatic reload monitoring
-reload-port = 3001
+reload-port = 3005
 
 # [Optional] Command to use when running end2end tests. It will run in the end2end dir.
 #   [Windows] for non-WSL use "npx.cmd playwright test"

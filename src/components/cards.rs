@@ -38,16 +38,16 @@ pub fn ProjectCard(
     #[prop(into)] link_text: String,
 ) -> impl IntoView {
     view! {
-        <Card class="p-8 h-full flex flex-col justify-between min-h-[200px] group">
-            <div class="space-y-4">
-                <h3 class="text-2xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">
+        <Card class="p-4 flex flex-col justify-between group min-h-[140px]">
+            <div class="space-y-2">
+                <h3 class="text-base font-bold text-primary group-hover:text-secondary transition-colors duration-300">
                     {title}
                 </h3>
-                <p class="text-foreground/80 leading-relaxed">
+                <p class="text-foreground/80 text-xs leading-relaxed line-clamp-3">
                     {description}
                 </p>
             </div>
-            <div class="pt-6 flex justify-end">
+            <div class="flex justify-end">
                 <a
                     href=link
                     class="text-sm font-medium text-muted hover:text-primary transition-colors duration-300 flex items-center gap-2"
@@ -78,64 +78,80 @@ pub fn LanguageCard(
     }
 }
 
-#[component]
-pub fn StatCard(
-    #[prop(into)] value: String,
-    #[prop(into)] label: String,
-    #[prop(optional, into)] class: String,
-) -> impl IntoView {
-    view! {
-        <div class=tw_merge!("bg-secondary/5 border border-secondary/10 p-4 rounded-xl flex flex-col justify-center items-center text-center hover:bg-secondary/10 hover:border-secondary/20 transition-all duration-300 group", class)>
-            <span class="text-3xl font-black text-secondary group-hover:scale-110 transition-transform duration-300">{value}</span>
-            <span class="text-[10px] text-muted font-bold uppercase tracking-widest">{label}</span>
-        </div>
-    }
-}
-
-#[component]
-pub fn InfoCard(
-    #[prop(into)] text: String,
-    #[prop(into)] subtext: String,
-    #[prop(optional, into)] class: String,
-) -> impl IntoView {
-    view! {
-        <div class=tw_merge!("bg-accent/5 border border-accent/10 p-4 rounded-xl flex flex-col justify-center gap-1 hover:bg-accent/10 hover:border-accent/20 transition-colors duration-300", class)>
-            <div class="flex items-center gap-2 text-accent/80">
-                <i class="fa-solid fa-location-dot text-xs"></i>
-                <span class="text-[10px] uppercase tracking-wider font-bold">"Location"</span>
-            </div>
-            <span class="text-lg font-bold text-foreground">{text}</span>
-            <span class="text-xs text-muted">{subtext}</span>
-        </div>
-    }
-}
 
 #[component]
 pub fn PlexCard(
-    #[prop(into)] song: String,
-    #[prop(into)] artist: String,
+    #[prop(into)] track: Option<crate::api::plex::TrackInfo>,
     #[prop(optional, into)] class: String,
 ) -> impl IntoView {
+    let status = track.as_ref().map(|t| t.status.clone()).unwrap_or_else(|| "stopped".to_string());
+    let thumb_url = track.as_ref().and_then(|t| t.thumb_url.clone());
+    let is_playing = status == "playing";
+
+    let anim_class = if is_playing { "animate-equalizer" } else { "h-[10%]" };
+
     view! {
-        <div class=tw_merge!("relative overflow-hidden bg-[#e5a00d]/5 border border-[#e5a00d]/20 p-5 rounded-xl flex items-center gap-4 hover:border-[#e5a00d]/40 transition-all duration-300 group", class)>
-            // Equalizer animation
-            <div class="flex gap-[3px] items-end h-8 w-8 pb-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                 <div class="w-1.5 bg-[#e5a00d] h-[40%] animate-[bounce_1s_infinite] rounded-t-sm"></div>
-                 <div class="w-1.5 bg-[#e5a00d] h-[100%] animate-[bounce_1.2s_infinite] rounded-t-sm"></div>
-                 <div class="w-1.5 bg-[#e5a00d] h-[60%] animate-[bounce_0.8s_infinite] rounded-t-sm"></div>
-                 <div class="w-1.5 bg-[#e5a00d] h-[80%] animate-[bounce_1.1s_infinite] rounded-t-sm"></div>
+        <div class=tw_merge!("relative overflow-hidden bg-background/80 backdrop-blur-md border border-[#e5a00d]/20 p-4 rounded-xl flex items-center gap-4 hover:border-[#e5a00d]/40 transition-all duration-300 group min-h-[140px]", class)>
+            <div class="relative flex-shrink-0">
+                {move || match &thumb_url {
+                    Some(url) => view! {
+                        <div class="w-24 h-24 rounded-lg overflow-hidden shadow-lg group-hover:shadow-[#e5a00d]/20 transition-shadow duration-300">
+                            <img 
+                                src=url.clone() 
+                                alt="Album Art" 
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                    }.into_any(),
+                    None => view! {
+                        <div class="w-24 h-24 rounded-lg bg-[#e5a00d]/10 flex items-center justify-center border border-[#e5a00d]/20">
+                            <i class="fa-solid fa-music text-[#e5a00d]/50 text-2xl"></i>
+                        </div>
+                    }.into_any()
+                }}
             </div>
 
-            <div class="flex flex-col min-w-0 z-10">
-                <div class="flex items-center gap-2 mb-0.5">
-                     <i class="fa-brands fa-plex text-[#e5a00d] text-xs"></i>
-                     <span class="text-[10px] uppercase tracking-wider text-[#e5a00d] font-bold">"Listening Now"</span>
+            <div class="flex flex-col min-w-0 z-10 flex-1 justify-center">
+                <div class="flex items-center gap-1.5 mb-2">
+                     <span class="text-[10px] uppercase tracking-wider text-[#e5a00d] font-bold">
+                        {move || match status.as_str() {
+                            "playing" => "Listening Now",
+                            "paused" => "Paused",
+                            _ => "Offline"
+                        }}
+                     </span>
+                     {move || if is_playing {
+                         view! {
+                             <div class="flex gap-[2px] items-end h-3 ml-1">
+                                 <div class=format!("w-0.5 bg-[#e5a00d] rounded-t-sm {}", anim_class) style="animation-delay: -0.15s"></div>
+                                 <div class=format!("w-0.5 bg-[#e5a00d] rounded-t-sm {}", anim_class) style="animation-delay: -0.35s"></div>
+                                 <div class=format!("w-0.5 bg-[#e5a00d] rounded-t-sm {}", anim_class) style="animation-delay: -0.55s"></div>
+                             </div>
+                         }.into_any()
+                     } else {
+                         view! { <></> }.into_any()
+                     }}
                 </div>
-                <span class="text-lg font-bold text-foreground truncate w-full group-hover:text-[#e5a00d] transition-colors duration-300">{song}</span>
-                <span class="text-xs text-muted truncate w-full group-hover:text-foreground/80 transition-colors duration-300">{artist}</span>
+                
+                {move || match &track {
+                    Some(t) => view! {
+                        <>
+                            <span class="text-lg font-bold text-foreground truncate w-full group-hover:text-[#e5a00d] transition-colors duration-300">
+                                {t.title.clone()}
+                            </span>
+                            <span class="text-sm text-muted truncate w-full group-hover:text-foreground/80 transition-colors duration-300">
+                                {format!("{} • {}", t.artist.clone(), t.album.clone())}
+                            </span>
+                        </>
+                    }.into_any(),
+                    None => view! {
+                        <span class="text-base font-medium text-muted/50 italic">
+                            "Silence is golden..."
+                        </span>
+                    }.into_any()
+                }}
             </div>
 
-            // Background subtle icon
             <i class="fa-brands fa-plex absolute -right-6 -bottom-8 text-[8rem] text-[#e5a00d]/5 rotate-[15deg] group-hover:rotate-[20deg] group-hover:scale-110 transition-all duration-500"></i>
         </div>
     }

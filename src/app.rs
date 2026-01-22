@@ -23,8 +23,8 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                     match (std::env::var("UMAMI_SCRIPT_URL"), std::env::var("UMAMI_WEBSITE_ID")) {
                         (Ok(url), Ok(id)) if !url.is_empty() && !id.is_empty() => view! {
                              <script defer src=url data-website-id=id></script>
-                        }.into_view(),
-                        _ => ().into_view()
+                        }.into_any(),
+                        _ => ().into_any()
                     }
                 }
             </head>

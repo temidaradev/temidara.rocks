@@ -6,7 +6,47 @@
 @tailwind utilities;
 
 :root {
-    --primary: #ff69b4;
-    --secondary: #9d72ff;
-    --background: #1a1a2e;
+    --primary: #f5c2e7;
+    /* Soft Pink */
+    --secondary: #89b4fa;
+    /* Baby Blue */
+    --accent: #cba6f7;
+    /* Lavender */
+    --background: #11111b;
+    /* Deep Mocha/Black */
+    --foreground: #cdd6f4;
+    /* Text */
+    --muted: #45475a;
+    /* Muted */
+    --surface: #181825;
+    /* Surface */
+}
+
+@layer utilities {
+    .glass {
+        @apply backdrop-blur-xl border border-white/5;
+        background-color: rgba(17, 17, 27, 0.7);
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
 }

@@ -50,7 +50,7 @@ pub fn HomePage() -> impl IntoView {
 
                         <div class="flex gap-4 pt-4">
                             <a href="https://github.com/temidaradev"><Button text="View Projects" variant="primary" size="lg" /></a>
-                            <a href="/blog"><Button text="Contact Me" variant="outline" size="lg" /></a>
+                            <a href="/contact"><Button text="Contact Me" variant="outline" size="lg" /></a>
                         </div>
 
                         <div class="pt-12 font-mono text-sm text-muted space-y-4">

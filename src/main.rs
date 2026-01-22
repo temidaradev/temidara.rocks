@@ -1,3 +1,4 @@
+#![recursion_limit = "512"]
 #[cfg(feature = "ssr")]
 use axum::Router;
 #[cfg(feature = "ssr")]
@@ -21,7 +22,7 @@ async fn main() {
     let routes = generate_route_list(App);
 
     let app = Router::new()
-        .route("/api/*fn_name", post(leptos_axum::handle_server_fns))
+        .route("/api/{*fn_name}", post(leptos_axum::handle_server_fns))
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())

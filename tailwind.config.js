@@ -6,7 +6,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['system-ui', 'Segoe UI', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['Outfit', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
         primary: 'rgb(var(--primary) / <alpha-value>)',
@@ -21,4 +23,3 @@ module.exports = {
   },
   plugins: [],
 }
-

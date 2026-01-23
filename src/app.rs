@@ -15,7 +15,8 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css"/>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-                <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,700"/>
+                <link rel="preconnect" href="https://fonts.bunny.net" />
+                <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500,600|outfit:400,500,600,700" rel="stylesheet" />
                 <script>
                     "use strict";
                     (function() {
@@ -40,9 +41,8 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                     }
                 }
             </head>
-            <body class="bg-background text-foreground relative">
+            <body class="bg-black text-white antialiased">
                 <App/>
-
             </body>
         </html>
     }
@@ -55,19 +55,14 @@ pub fn App() -> impl IntoView {
     view! {
         <Stylesheet id="leptos" href="/pkg/temidaradev-rust.css"/>
 
-        <Title text="Temidaradev"/>
+        <Title text="temidaradev"/>
 
         <Router>
-            <div class="min-h-screen bg-background relative overflow-hidden selection:bg-primary/30">
-                <div class="fixed inset-0 z-0 opacity-30 pointer-events-none">
-                    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-float"></div>
-                    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[120px] animate-float" style="animation-delay: -3s;"></div>
-                </div>
-
+            <div class="min-h-screen p-6 max-w-3xl mx-auto">
                 <crate::components::navbar::NavBar />
 
-                <main>
-                    <Routes fallback=|| "Page not found.".into_view()>
+                <main class="py-8">
+                    <Routes fallback=|| "404 - Not Found".into_view()>
                         <Route path=StaticSegment("") view=crate::pages::HomePage/>
                         <Route path=StaticSegment("blog") view=crate::pages::BlogPage/>
                         <Route path=path!("blog/:slug") view=crate::pages::BlogPostPage/>

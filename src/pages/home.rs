@@ -1,4 +1,3 @@
-use crate::components::*;
 use leptos::prelude::*;
 
 #[component]
@@ -29,148 +28,98 @@ pub fn HomePage() -> impl IntoView {
     );
 
     view! {
-        <div class="relative z-10">
-            <main class="max-w-7xl mx-auto px-6 py-32 lg:py-48">
-                <div class="grid lg:grid-cols-2 gap-16 items-start">
-                    <div class="space-y-8">
-                        <div class="space-y-2">
-                            <span class="font-mono text-accent text-sm tracking-wider">"Hello World, I am"</span>
-                            <h1 class="text-6xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50">
-                                "Temidaradev"
-                            </h1>
-                            <Text variant="gradient" size="xl" weight="bold" class="text-2xl lg:text-3xl opacity-90">
-                                "Systems Enjoyer & Rustacean"
-                            </Text>
-                        </div>
+        <div class="space-y-12">
+            <section class="space-y-4">
+                <h1 class="text-xl font-bold tracking-tight text-white">"temidaradev"</h1>
+                <div class="text-sm space-y-1 text-gray-400 font-mono">
+                    <p>"-> systems developer & student"</p>
+                    <p>"-> 17 years old"</p>
+                    <p>"-> located in türkiye"</p>
+                </div>
+                
+                <p class="max-w-xl text-sm leading-relaxed text-gray-300">
+                    "I enjoy building high-performance systems and tools. Currently exploring embedded development and OS design. Writing Rust, Go, and TypeScript."
+                </p>
 
-                        <p class="text-muted text-lg leading-relaxed max-w-xl">
-                            "Building stuff with Rust and Go, breaking things along the way.
-                            I like making tools that actually work and UIs that don't hurt to look at."
-                        </p>
-
-                        <div class="flex gap-4 pt-4">
-                            <a href="https://github.com/temidaradev"><Button text="View Projects" variant="primary" size="lg" /></a>
-                            <a href="/contact"><Button text="Contact Me" variant="outline" size="lg" /></a>
-                        </div>
-
-                        <div class="pt-12 font-mono text-sm text-muted space-y-4">
-                             <div class="border border-primary/20 bg-surface/30 backdrop-blur-sm rounded-xl p-4 max-w-sm">
-                                <div class="flex items-center gap-2 text-xs text-muted mb-3 pb-2 border-b border-white/5">
-                                    <div class="flex gap-1.5">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-primary/80"></span>
-                                        <span class="w-2.5 h-2.5 rounded-full bg-secondary/80"></span>
-                                        <span class="w-2.5 h-2.5 rounded-full bg-accent/80"></span>
+                <Transition fallback=|| view! { 
+                    <div class="pt-3 border-t border-white/10 text-[10px] uppercase tracking-wider font-mono text-gray-600">
+                        "// media server offline"
+                    </div>
+                }>
+                    {move || match plex_resource.get() {
+                        Some(Some(track)) => {
+                            if track.status == "playing" {
+                                view! {
+                                     <div class="pt-3 border-t border-white/10 text-xs font-mono">
+                                        <div class="flex items-center gap-2 text-green-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                            <span class="text-[10px] uppercase tracking-wider">"listening now"</span>
+                                        </div>
+                                        <div class="mt-1 text-white truncate max-w-sm">
+                                            {track.artist} " - " {track.title}
+                                        </div>
                                     </div>
-                                    <span class="font-mono opacity-60">"status"</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <div class="text-xs text-muted space-y-1 pt-1">
-                                        <p>"17 / Rust and Go / Türkiye 🇹🇷"</p>
-                                        <p class="text-foreground/60">"Coding and psychology enjoyer"</p>
+                                }.into_any()
+                            } else {
+                                view! {
+                                     <div class="pt-3 border-t border-white/10 text-xs font-mono">
+                                        <div class="flex items-center gap-2 text-yellow-500">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                                            <span class="text-[10px] uppercase tracking-wider">"paused"</span>
+                                        </div>
+                                        <div class="mt-1 text-gray-400 truncate max-w-sm">
+                                            {track.artist} " - " {track.title}
+                                        </div>
                                     </div>
-                                    <div class="flex items-center gap-4 pt-1">
-                                        <a href="https://github.com/temidaradev" class="text-muted hover:text-primary transition-all duration-200 hover:-translate-y-0.5">
-                                            <i class="fa-brands fa-github text-lg"></i>
-                                        </a>
-                                        <a href="https://x.com/temidaradev" class="text-muted hover:text-[#1DA1F2] transition-all duration-200 hover:-translate-y-0.5">
-                                            <i class="fa-brands fa-x-twitter text-lg"></i>
-                                        </a>
-                                        <a href="https://discord.gg/" class="text-muted hover:text-[#5865F2] transition-all duration-200 hover:-translate-y-0.5">
-                                            <i class="fa-brands fa-discord text-lg"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                                }.into_any()
+                            }
+                        },
+                        _ => view! {
+                             <div class="pt-3 border-t border-white/10 text-[10px] uppercase tracking-wider font-mono text-gray-600">
+                                "// music paused"
                             </div>
+                        }.into_any()
+                    }}
+                </Transition>
+            </section>
 
-                             <div class="pt-8">
-                                <Transition fallback=move || view! { <div class="text-muted animate-pulse">"Scanning frequencies..."</div> }>
-                                    {
-                                        move || {
-                                            plex_resource.get().map(|track| view! {
-                                                    <PlexCard track=track class="max-w-sm w-full" />
-                                            })
-                                        }
-                                    }
-                                </Transition>
-                            </div>
-                        </div>
+            <section class="space-y-4">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Projects"</h2>
+                <div class="grid gap-4">
+                    <div class="group">
+                        <a href="https://crates.io/crates/mdif" class="text-white hover:underline font-medium">"mdif"</a>
+                        <p class="text-gray-400 text-sm">"Terminal-based disk usage analyzer."</p>
+                        <p class="text-gray-500 text-xs">"-> crates.io"</p>
+                    </div>
+                    
+                    <div class="group">
+                        <a href="https://github.com/temidaradev/NeuralRust" class="text-white hover:underline font-medium">"neural-rust"</a>
+                        <p class="text-gray-400 text-sm">"Neural network implementation from scratch."</p>
+                        <p class="text-gray-500 text-xs">"-> github.com"</p>
                     </div>
 
-                    <div class="flex flex-col gap-8">
-                        <div>
-                             <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-code text-primary"></i>
-                                "Languages & Tech"
-                             </h3>
-                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                <LanguageCard name="Rust" meta="Systems" class="border-orange-500/30 bg-orange-500/5" />
-                                <LanguageCard name="TypeScript" meta="Frontend" class="border-blue-500/30 bg-blue-500/5" />
-                                <LanguageCard name="Go" meta="Backend" class="border-cyan-500/30 bg-cyan-500/5" />
-                                <LanguageCard name="Python" meta="Scripting" class="border-yellow-500/30 bg-yellow-500/5" />
-                                <LanguageCard name="Docker" meta="DevOps" class="border-blue-600/30 bg-blue-600/5" />
-                                <LanguageCard name="Linux" meta="Environment" class="border-white/20 bg-white/5" />
-                             </div>
-                        </div>
+                    <div class="group">
+                        <a href="https://www.pling.com/p/2334389/" class="text-white hover:underline font-medium">"fastfetchus"</a>
+                        <p class="text-gray-400 text-sm">"KDE Plasma widget for fastfetch."</p>
+                        <p class="text-gray-500 text-xs">"-> pling.com"</p>
+                    </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-flask text-secondary"></i>
-                                "Featured Projects"
-                             </h3>
-                            <div class="grid grid-cols-2 gap-3">
-                                <ProjectCard
-                                    title="Temidara.rocks"
-                                    description="Personal portfolio built with Rust (Leptos) and TailwindCSS."
-                                    link="https://github.com/temidaradev/temidara.rocks"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="mdif"
-                                    description="My Disk Is Full - disk space analyzer."
-                                    link="https://crates.io/crates/mdif"
-                                    link_text="View Site"
-                                />
-                                <ProjectCard
-                                    title="NeuralRust"
-                                    description="A neural network implementation written in Rust, designed for learning and experimentation with machine learning concepts."
-                                    link="https://github.com/temidaradev/NeuralRust"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="Nixos"
-                                    description="My nixos config."
-                                    link="https://github.com/temidaradev/nixos"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="pico2-riscv-badapple"
-                                    description="Badapple but on risc-v activated pi pico 2"
-                                    link="https://github.com/temidaradev/pico2-riscv-badapple"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="Deneyap1AV2-BadApple"
-                                    description="Badapple but on made in Turkiye esp32-s3 based board (with sound)"
-                                    link="https://github.com/temidaradev/DeneyapA1V2-BadApple"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="fastfetchus"
-                                    description="A KDE Plasma (Plasma 6) widget that renders fastfetch output inside QML."
-                                    link="https://github.com/temidaradev/fastfetchus"
-                                    link_text="View Source"
-                                />
-                                <ProjectCard
-                                    title="More Projects"
-                                    description="Check out all my work on GitHub."
-                                    link="https://github.com/temidaradev"
-                                    link_text="GitHub"
-                                />
-                            </div>
-                        </div>
+                    <div class="group">
+                        <a href="https://github.com/temidaradev/nixos" class="text-white hover:underline font-medium">"dotfiles"</a>
+                        <p class="text-gray-400 text-sm">"NixOS configuration and system setup."</p>
+                        <p class="text-gray-500 text-xs">"-> github.com"</p>
                     </div>
                 </div>
-            </main>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Socials"</h2>
+                <div class="flex gap-4 text-sm font-mono text-gray-400">
+                    <a href="mailto:temidaradev@temidara.rocks" class="hover:text-white hover:underline">"email"</a>
+                    <a href="https://github.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"github"</a>
+                    <a href="https://x.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"twitter"</a>
+                </div>
+            </section>
         </div>
     }
 }

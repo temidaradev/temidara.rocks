@@ -3,125 +3,127 @@
 @tailwind utilities;
 
 :root {
-    --primary: 245 194 231;
-    /* Soft Pink */
-    --secondary: 137 180 250;
-    /* Baby Blue */
-    --accent: 203 166 247;
-    /* Lavender */
-    --background: 17 17 27;
-    /* Deep Mocha/Black */
-    --foreground: 205 214 244;
-    /* Text */
-    --muted: 69 71 90;
-    /* Muted */
-    --surface: 24 24 37;
-    /* Surface */
+    /* Premium Dark Theme */
+    --background: 5 5 10;
+    /* Very Deep, almost black */
+    --surface: 15 15 25;
+    /* Slightly lighter for cards */
+    --primary: 99 102 241;
+    /* Indigo-500: Vibrant & Professional */
+    --primary-dark: 67 56 202;
+    /* Indigo-700 */
+    --secondary: 168 85 247;
+    /* Purple-500 */
+    --accent: 14 165 233;
+    /* Sky-500 */
+
+    --foreground: 226 232 240;
+    /* Slate-200 */
+    --muted: 148 163 184;
+    /* Slate-400 */
+
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-body);
+        scroll-behavior: smooth;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+    }
 }
 
 @layer utilities {
     .glass {
-        @apply backdrop-blur-xl border border-white/5;
-        background-color: rgba(17, 17, 27, 0.7);
+        @apply backdrop-blur-md bg-white/5 border border-white/10 shadow-xl;
     }
 
     .text-gradient {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary;
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
     }
 
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
+    .mesh-bg {
+        background-color: rgb(var(--background));
+        background-image:
+            radial-gradient(at 0% 0%, rgba(var(--primary), 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(var(--secondary), 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(var(--accent), 0.1) 0px, transparent 50%);
+        background-attachment: fixed;
     }
 
-    @keyframes float {
-        0% {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-20px);
-        }
-
-        100% {
-            transform: translateY(0px);
-        }
+    .animate-in-up {
+        animation: active-in-up 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    .animate-equalizer {
-        animation: equalizer 1.5s ease-in-out infinite;
-    }
-
-    @keyframes equalizer {
-
-        0%,
-        100% {
-            height: 10%;
-        }
-
-        50% {
-            height: 100%;
+    @keyframes active-in-up {
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }
 
 @layer components {
 
-    .blog-content h1,
-    .blog-content h2,
-    .blog-content h3 {
-        @apply text-white font-bold mt-8 mb-4 flex items-center;
-    }
-
+    /* Blog Typography */
     .blog-content h1 {
-        @apply text-4xl border-l-4 border-primary pl-4;
+        @apply text-4xl font-bold mt-12 mb-6 text-white tracking-tight;
     }
 
     .blog-content h2 {
-        @apply text-3xl border-l-4 border-accent pl-4;
+        @apply text-2xl font-semibold mt-10 mb-5 text-white tracking-tight;
     }
 
     .blog-content h3 {
-        @apply text-2xl border-l-4 border-secondary pl-4;
+        @apply text-xl font-medium mt-8 mb-4 text-white;
     }
 
     .blog-content p {
-        @apply text-foreground leading-relaxed mb-4 text-lg;
+        @apply text-lg leading-8 text-muted mb-6;
     }
 
-    .blog-content ul,
+    .blog-content ul {
+        @apply list-disc list-outside ml-6 space-y-2 text-muted mb-6;
+    }
+
     .blog-content ol {
-        @apply ml-6 mb-4 list-disc space-y-2 text-foreground;
-    }
-
-    .blog-content li {
-        @apply pl-2;
+        @apply list-decimal list-outside ml-6 space-y-2 text-muted mb-6;
     }
 
     .blog-content a {
-        @apply text-primary hover:text-secondary underline transition-colors;
-    }
-
-    .blog-content blockquote {
-        @apply border-l-4 border-white/20 pl-4 py-1 my-4 italic text-muted;
+        @apply text-primary hover:text-accent underline underline-offset-4 decoration-2 decoration-primary/30 hover:decoration-accent transition-colors;
     }
 
     .blog-content pre {
-        @apply bg-surface/50 border border-white/5 rounded-xl p-4 my-6 overflow-x-auto;
+        @apply bg-[#0d1117] border border-white/10 rounded-lg p-6 my-8 overflow-x-auto;
     }
 
     .blog-content code {
-        @apply font-mono text-sm text-accent bg-surface/80 px-1.5 py-0.5 rounded;
+        @apply font-mono text-sm bg-white/10 px-1.5 py-0.5 rounded text-accent;
+        font-family: var(--font-mono);
     }
 
     .blog-content pre code {
-        @apply bg-transparent p-0 text-foreground text-base;
+        @apply bg-transparent p-0 text-gray-300;
+    }
+
+    .blog-content blockquote {
+        @apply border-l-4 border-primary/50 pl-6 italic text-muted my-8;
     }
 
     .blog-content img {
-        @apply rounded-xl shadow-lg my-8 border border-white/5 w-full;
-    }
-
-    .blog-content strong {
-        @apply text-white font-bold;
+        @apply rounded-lg shadow-2xl border border-white/5 my-8 w-full;
     }
 }

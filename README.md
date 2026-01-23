@@ -2,6 +2,8 @@
 
 A personal portfolio website built with Rust, Leptos, and TailwindCSS.
 
+<img width="749" height="989" alt="image" src="https://github.com/user-attachments/assets/8f601912-04aa-4fd0-9b13-3c913bbc3c7a" />
+
 ## Project Structure
 
 - `src/main.rs`: Entry point for the server-side rendering (SSR) application.

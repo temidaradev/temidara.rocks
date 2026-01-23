@@ -1,4 +1,3 @@
-use crate::components::{text::Text, cards::Card};
 use crate::api::blog::get_repo_readme;
 use leptos::prelude::*;
 use leptos_router::hooks::use_params_map;
@@ -87,46 +86,28 @@ pub fn BlogPage() -> impl IntoView {
     let posts = get_blog_posts();
 
     view! {
-        <div class="relative z-10">
-            <main class="max-w-4xl mx-auto px-6 py-32 lg:py-40">
-                <div class="text-center mb-16 space-y-4">
-                    <h1 class="text-5xl lg:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary animate-fade-in">
-                        "Blog"
-                    </h1>
-                     <Text variant="muted" size="lg" class="max-w-xl mx-auto">
-                        "Explorations in Rust, Embedded Systems, and Web Development."
-                    </Text>
-                </div>
+        <div class="space-y-8">
+             <h1 class="text-xl font-bold tracking-tight text-white">"blog"</h1>
 
-                <div class="grid gap-6">
-                    {posts.into_iter().map(|post| {
-                        view! {
-                            <A href=format!("/blog/{}", post.slug) attr:class="block group">
-                                <Card variant="Bordered" class="p-8 hover:bg-surface/50 transition-all duration-300 border-white/5 hover:border-primary/20">
-                                    <div class="flex flex-col gap-3">
-                                        <div class="flex justify-between items-start">
-                                            <h2 class="text-2xl font-bold text-primary group-hover:text-white transition-colors duration-300">
-                                                {post.title}
-                                            </h2>
-                                            <span class="text-xs font-mono text-muted bg-white/5 px-2 py-1 rounded">
-                                                {post.date}
-                                            </span>
-                                        </div>
-                                        <p class="text-muted text-base leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
-                                            {post.description}
-                                        </p>
-
-                                        <div class="pt-4 flex items-center gap-2 text-sm text-secondary/0 group-hover:text-secondary/100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
-                                            <span>"Read Article"</span>
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </div>
-                                    </div>
-                                </Card>
-                            </A>
-                        }
-                    }).collect::<Vec<_>>()}
-                </div>
-            </main>
+            <div class="grid gap-6">
+                {posts.into_iter().map(|post| {
+                    view! {
+                         <article class="group relative">
+                            <div class="flex items-baseline justify-between mb-1">
+                                <a href=format!("/blog/{}", post.slug) class="font-bold text-gray-200 hover:text-white hover:underline">
+                                    {post.title}
+                                </a>
+                                <span class="text-xs font-mono text-gray-600">
+                                    {post.date}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 leading-snug line-clamp-2">
+                                {post.description}
+                            </p>
+                        </article>
+                    }
+                }).collect::<Vec<_>>()}
+            </div>
         </div>
     }
 }
@@ -149,40 +130,33 @@ pub fn BlogPostPage() -> impl IntoView {
     );
 
     view! {
-        <Suspense fallback=move || view! { <div class="text-center py-20 text-muted">"Loading..."</div> }>
-            <div class="relative z-10">
-                <main class="max-w-3xl mx-auto px-6 py-32 lg:py-40">
-                    {move || match post_resource.get().flatten() {
-                        Some((p, content)) => view! {
-                            <article class="prose prose-invert prose-lg max-w-none">
-                                <div class="mb-12 border-b border-white/10 pb-8">
-                                    <A href="/blog" attr:class="no-underline text-sm text-muted hover:text-primary mb-8 inline-flex items-center gap-2 transition-colors">
-                                        <i class="fa-solid fa-arrow-left"></i>
-                                        "Back to Blog"
-                                    </A>
-                                    <h1 class="text-4xl lg:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-white mb-4">
-                                        {p.title}
-                                    </h1>
-                                    <div class="flex items-center gap-4 text-sm text-muted font-mono">
-                                        <span>{p.date}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="blog-content text-foreground/90 leading-relaxed space-y-6" inner_html=md_to_html(&content)>
-                                </div>
-                            </article>
-                        }.into_any(),
-                        None => view! {
-                            <div class="text-center py-20">
-                                <h2 class="text-3xl font-bold text-white mb-4">"Post not found"</h2>
-                                 <A href="/blog" attr:class="text-primary hover:text-secondary underline">
-                                    "Return to Blog"
-                                </A>
-                            </div>
-                        }.into_any()
-                    }}
-                </main>
-            </div>
+        <Suspense fallback=move || view! { <div class="font-mono text-sm text-gray-500">"loading..."</div> }>
+            {move || match post_resource.get().flatten() {
+                Some((p, content)) => view! {
+                    <article class="max-w-none">
+                        <div class="mb-12 border-b border-white/10 pb-8">
+                            <A href="/blog" attr:class="no-underline text-xs font-mono text-gray-500 hover:text-white mb-6 block">
+                                "<- back"
+                            </A>
+                            <h1 class="text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
+                                {p.title}
+                            </h1>
+                            <time class="text-xs font-mono text-gray-500">{p.date}</time>
+                        </div>
+                        
+                        <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content)>
+                        </div>
+                    </article>
+                }.into_any(),
+                None => view! {
+                    <div class="py-20 space-y-4">
+                        <h2 class="text-xl font-bold text-white">"404: post not found"</h2>
+                         <A href="/blog" attr:class="underline text-gray-400 hover:text-white">
+                            "return to blog"
+                        </A>
+                    </div>
+                }.into_any()
+            }}
         </Suspense>
     }
 }

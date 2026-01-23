@@ -47,17 +47,33 @@ pub fn HomePage() -> impl IntoView {
                     </div>
                 }>
                     {move || match plex_resource.get() {
-                        Some(Some(track)) => view! {
-                             <div class="pt-3 border-t border-white/10 text-xs font-mono">
-                                <div class="flex items-center gap-2 text-green-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                    <span class="text-[10px] uppercase tracking-wider">"listening now"</span>
-                                </div>
-                                <div class="mt-1 text-white truncate max-w-sm">
-                                    {track.artist} " - " {track.title}
-                                </div>
-                            </div>
-                        }.into_any(),
+                        Some(Some(track)) => {
+                            if track.status == "playing" {
+                                view! {
+                                     <div class="pt-3 border-t border-white/10 text-xs font-mono">
+                                        <div class="flex items-center gap-2 text-green-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                            <span class="text-[10px] uppercase tracking-wider">"listening now"</span>
+                                        </div>
+                                        <div class="mt-1 text-white truncate max-w-sm">
+                                            {track.artist} " - " {track.title}
+                                        </div>
+                                    </div>
+                                }.into_any()
+                            } else {
+                                view! {
+                                     <div class="pt-3 border-t border-white/10 text-xs font-mono">
+                                        <div class="flex items-center gap-2 text-yellow-500">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                                            <span class="text-[10px] uppercase tracking-wider">"paused"</span>
+                                        </div>
+                                        <div class="mt-1 text-gray-400 truncate max-w-sm">
+                                            {track.artist} " - " {track.title}
+                                        </div>
+                                    </div>
+                                }.into_any()
+                            }
+                        },
                         _ => view! {
                              <div class="pt-3 border-t border-white/10 text-[10px] uppercase tracking-wider font-mono text-gray-600">
                                 "// music paused"

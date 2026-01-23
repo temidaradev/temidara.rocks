@@ -16,7 +16,19 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,700"/>
-                <AutoReload options=options.clone() />
+                <script>
+                    "use strict";
+                    (function() {
+                        const evtSource = new EventSource("/reload-events");
+                        evtSource.onmessage = function(event) {
+                             console.log("Reloading due to server change...");
+                             window.location.reload();
+                        };
+                        evtSource.onerror = function(err) {
+                            console.error("EventSource failed:", err);
+                        };
+                    })();
+                </script>
                 <HydrationScripts options/>
                 <MetaTags/>
                 {

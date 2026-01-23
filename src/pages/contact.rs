@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-use crate::components::*;
+
 
 #[component]
 pub fn ContactPage() -> impl IntoView {
@@ -38,118 +38,79 @@ pub fn ContactPage() -> impl IntoView {
     };
 
     view! {
-        <div class="relative z-10 min-h-screen">
-            <main class="max-w-2xl mx-auto px-6 py-32 lg:py-40">
-                <div class="text-center mb-12 space-y-4">
-                    <h1 class="text-5xl lg:text-6xl font-black tracking-tight text-gradient">
-                        "Contact Form"
-                    </h1>
-                    <div class="w-32 h-1 mx-auto bg-gradient-to-r from-primary via-accent to-secondary rounded-full"></div>
-                    <Text variant="default" size="lg" weight="bold" class="pt-4">
-                        "Get in Touch!"
-                    </Text>
-                    <Text variant="dimmed" size="md">
-                        "Have a project in mind or just want to say hi? Drop me a message!"
-                    </Text>
+        <div class="space-y-8">
+            <h1 class="text-xl font-bold tracking-tight text-white">"contact"</h1>
+
+            <form on:submit=on_submit class="max-w-md space-y-4">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-gray-500 uppercase">"name"</label>
+                        <input
+                            type="text"
+                            required
+                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+                            prop:value=move || name.get()
+                            on:input=move |ev| set_name.set(event_target_value(&ev))
+                        />
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-gray-500 uppercase">"email"</label>
+                        <input
+                            type="email"
+                            required
+                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+                            prop:value=move || email.get()
+                            on:input=move |ev| set_email.set(event_target_value(&ev))
+                        />
+                    </div>
                 </div>
 
-                <div class="glass rounded-2xl p-8 shadow-xl border border-white/10">
-                    <form on:submit=on_submit class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-foreground">
-                                "Name"
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                placeholder="Your name..."
-                                class="w-full px-4 py-3 bg-surface/80 border border-white/10 rounded-xl text-foreground placeholder-muted/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                                prop:value=move || name.get()
-                                on:input=move |ev| set_name.set(event_target_value(&ev))
-                            />
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-foreground">
-                                "Email"
-                            </label>
-                            <input
-                                type="email"
-                                required
-                                placeholder="your@email.com"
-                                class="w-full px-4 py-3 bg-surface/80 border border-white/10 rounded-xl text-foreground placeholder-muted/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                                prop:value=move || email.get()
-                                on:input=move |ev| set_email.set(event_target_value(&ev))
-                            />
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-foreground">
-                                "Message"
-                            </label>
-                            <textarea
-                                required
-                                rows="5"
-                                placeholder="Write your message here..."
-                                class="w-full px-4 py-3 bg-surface/80 border border-white/10 rounded-xl text-foreground placeholder-muted/50 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none"
-                                prop:value=move || message.get()
-                                on:input=move |ev| set_message.set(event_target_value(&ev))
-                            ></textarea>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled=move || is_submitting.get()
-                            class="w-full py-4 bg-gradient-to-r from-primary via-accent to-secondary text-background font-bold text-lg rounded-xl shadow-[0_0_30px_-5px_rgba(245,194,231,0.4)] hover:shadow-[0_0_40px_-5px_rgba(245,194,231,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        >
-                            {move || {
-                                if is_submitting.get() {
-                                    "Sending..."
-                                } else {
-                                    "Send Message"
-                                }
-                            }}
-                        </button>
-
-                        {move || {
-                            submit_status.get().map(|success| {
-                                if success {
-                                    view! {
-                                        <div class="text-center p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400">
-                                            <i class="fa-solid fa-check-circle mr-2"></i>
-                                            "Message sent successfully!"
-                                        </div>
-                                    }
-                                } else {
-                                    view! {
-                                        <div class="text-center p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
-                                            <i class="fa-solid fa-times-circle mr-2"></i>
-                                            "Failed to send. Please try again."
-                                        </div>
-                                    }
-                                }
-                            })
-                        }}
-                    </form>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">"message"</label>
+                    <textarea
+                        required
+                        rows="4"
+                        class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors resize-none"
+                        prop:value=move || message.get()
+                        on:input=move |ev| set_message.set(event_target_value(&ev))
+                    ></textarea>
                 </div>
 
-                <div class="flex justify-center gap-8 mt-12 text-2xl">
-                    <a 
-                        href="https://twitter.com/temidaradev" 
-                        target="_blank"
-                        class="text-foreground hover:text-primary transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                    >
-                        <i class="fa-brands fa-x-twitter"></i>
-                    </a>
-                    <a 
-                        href="https://github.com/temidaradev" 
-                        target="_blank"
-                        class="text-foreground hover:text-primary transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                    >
-                        <i class="fa-brands fa-github"></i>
-                    </a>
-                </div>
-            </main>
+                <button
+                    type="submit"
+                    disabled=move || is_submitting.get()
+                    class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                    {move || if is_submitting.get() { "sending..." } else { "send" }}
+                </button>
+
+                {move || {
+                    submit_status.get().map(|success| {
+                        if success {
+                            view! {
+                                <div class="text-green-500 font-mono text-sm">
+                                    "-> message sent successfully."
+                                </div>
+                            }
+                        } else {
+                            view! {
+                                <div class="text-red-500 font-mono text-sm">
+                                    "-> failed to send message."
+                                </div>
+                            }
+                        }
+                    })
+                }}
+            </form>
+            
+            <div class="pt-8 border-t border-white/10">
+                <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">"socials"</h2>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="https://x.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"twitter / x"</a></li>
+                    <li><a href="https://github.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"github"</a></li>
+                </ul>
+            </div>
         </div>
     }
 }

@@ -12,7 +12,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="stylesheet" id="leptos" href="/pkg/leptos_tailwind.css"/>
+                <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css"/>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,700"/>

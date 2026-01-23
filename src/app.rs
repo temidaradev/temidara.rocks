@@ -12,7 +12,10 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css"/>
+                <style>
+                    "body { background-color: #05050a; color: #e2e8f0; }"
+                </style>
+                <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -22,8 +25,8 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                     (function() {
                         const evtSource = new EventSource("/reload-events");
                         evtSource.onmessage = function(event) {
-                             console.log("Reloading due to server change...");
-                             window.location.reload();
+                            console.log("Reloading due to server change...");
+                            window.location.reload();
                         };
                         evtSource.onerror = function(err) {
                             console.error("EventSource failed:", err);
@@ -35,7 +38,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 {
                     match (std::env::var("UMAMI_SCRIPT_URL"), std::env::var("UMAMI_WEBSITE_ID")) {
                         (Ok(url), Ok(id)) if !url.is_empty() && !id.is_empty() => view! {
-                             <script defer src=url data-website-id=id></script>
+                            <script defer src=url data-website-id=id></script>
                         }.into_any(),
                         _ => ().into_any()
                     }
@@ -53,7 +56,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-        <Stylesheet id="leptos" href="/pkg/temidaradev-rust.css"/>
+        <Stylesheet id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
 
         <Title text="temidaradev"/>
 

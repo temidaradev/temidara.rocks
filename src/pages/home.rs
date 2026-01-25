@@ -153,6 +153,17 @@ pub fn HomePage() -> impl IntoView {
             </section>
 
             <section class="space-y-4">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Activity"</h2>
+                <div class="group relative w-fit overflow-hidden rounded-lg bg-black/20 transition-colors">
+                    <img 
+                        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=12057&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&hide_border=true" 
+                        alt="Wakatime Stats"
+                        class="h-32 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
+                    />
+                </div>
+            </section>
+
+            <section class="space-y-4">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Socials"</h2>
                 <div class="flex gap-4 text-sm font-mono text-gray-400">
                     <a href="mailto:temidaradev@temidara.rocks" class="hover:text-white hover:underline">"email"</a>

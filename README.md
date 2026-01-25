@@ -2,7 +2,7 @@
 
 A personal portfolio website built with Rust, Leptos, and TailwindCSS.
 
-<img width="749" height="989" alt="image" src="https://github.com/user-attachments/assets/8f601912-04aa-4fd0-9b13-3c913bbc3c7a" />
+<img width="743" height="1076" alt="image" src="https://github.com/user-attachments/assets/2659e414-1497-42fb-a621-12e6e5f45e24" />
 
 ## Project Structure
 

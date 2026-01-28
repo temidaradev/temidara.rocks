@@ -709,7 +709,8 @@ h1,
   color: rgb(var(--muted) / var(--tw-text-opacity, 1));
 }
 
-.blog-content img {
+.blog-content img,
+    .blog-content video {
   margin-top: 2rem;
   margin-bottom: 2rem;
   width: 100%;
@@ -728,6 +729,11 @@ h1,
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .mb-1 {
@@ -964,6 +970,10 @@ h1,
   border-color: rgb(255 255 255 / 0.1);
 }
 
+.border-white\/5 {
+  border-color: rgb(255 255 255 / 0.05);
+}
+
 .bg-\[\#111\] {
   --tw-bg-opacity: 1;
   background-color: rgb(17 17 17 / var(--tw-bg-opacity, 1));
@@ -1180,6 +1190,12 @@ h1,
 
 .opacity-80 {
   opacity: 0.8;
+}
+
+.shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .shadow-lg {

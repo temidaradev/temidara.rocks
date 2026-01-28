@@ -1,7 +1,7 @@
 use crate::api::blog::get_repo_readme;
 use leptos::prelude::*;
-use leptos_router::hooks::use_params_map;
 use leptos_router::components::A;
+use leptos_router::hooks::use_params_map;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -116,16 +116,18 @@ pub fn BlogPage() -> impl IntoView {
 pub fn BlogPostPage() -> impl IntoView {
     let params = use_params_map();
     let slug = move || params.get().get("slug").unwrap_or_default();
-    
+
     let post_resource = Resource::new(
         move || slug(),
         |slug| async move {
-             if let Some(post) = get_blog_posts().into_iter().find(|p| p.slug == slug) {
-                let content = get_repo_readme(post.readme_url.clone()).await.unwrap_or_default();
+            if let Some(post) = get_blog_posts().into_iter().find(|p| p.slug == slug) {
+                let content = get_repo_readme(post.readme_url.clone())
+                    .await
+                    .unwrap_or_default();
                 Some((post, content))
-             } else {
-                 None
-             }
+            } else {
+                None
+            }
         },
     );
 
@@ -143,7 +145,7 @@ pub fn BlogPostPage() -> impl IntoView {
                             </h1>
                             <time class="text-xs font-mono text-gray-500">{p.date}</time>
                         </div>
-                        
+
                         <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content)>
                         </div>
                     </article>
@@ -162,8 +164,74 @@ pub fn BlogPostPage() -> impl IntoView {
 }
 
 fn md_to_html(md: &str) -> String {
-    let parser = pulldown_cmark::Parser::new(md);
+    use pulldown_cmark::{CowStr, Event, Options, Parser, Tag, TagEnd};
+
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    options.insert(Options::ENABLE_FOOTNOTES);
+    options.insert(Options::ENABLE_STRIKETHROUGH);
+    options.insert(Options::ENABLE_TASKLISTS);
+    options.insert(Options::ENABLE_SMART_PUNCTUATION);
+
+    let parser = Parser::new_ext(md, options);
+    let mut new_events = Vec::new();
+    let mut in_video_link = false;
+
+    for event in parser {
+        if in_video_link {
+            if let Event::End(TagEnd::Link) = event {
+                in_video_link = false;
+            }
+            continue;
+        }
+
+        let mut replaced = false;
+        match &event {
+            Event::Text(text) => {
+                if (text.starts_with("http://") || text.starts_with("https://"))
+                    && is_video_url(text)
+                {
+                    new_events.push(Event::Html(CowStr::from(video_player_html(text))));
+                    replaced = true;
+                }
+            }
+            Event::Start(Tag::Link { dest_url, .. }) => {
+                if is_video_url(dest_url) {
+                    new_events.push(Event::Html(CowStr::from(video_player_html(dest_url))));
+                    in_video_link = true;
+                    replaced = true;
+                }
+            }
+            _ => {}
+        }
+
+        if !replaced {
+            new_events.push(event);
+        }
+    }
+
     let mut html_output = String::new();
-    pulldown_cmark::html::push_html(&mut html_output, parser);
+    pulldown_cmark::html::push_html(&mut html_output, new_events.into_iter());
     html_output
+}
+
+fn is_video_url(url: &str) -> bool {
+    let lower = url.to_lowercase();
+    lower.ends_with(".mp4")
+        || lower.ends_with(".mov")
+        || lower.ends_with(".webm")
+        || lower.ends_with(".m4v")
+        || lower.contains("user-attachments/assets")
+}
+
+fn video_player_html(url: &str) -> String {
+    format!(
+        r#"<video controls playsinline preload="metadata" class="w-full rounded-lg border border-white/10 my-4 shadow-lg bg-black/50" style="max-height: 600px;">
+            <source src="{}" type="video/mp4">
+            <p class="text-sm text-gray-500 text-center py-2">
+                 Unable to play video. <a href="{}" class="text-blue-400 hover:underline" target="_blank">Download here</a>
+            </p>
+        </video>"#,
+        url, url
+    )
 }

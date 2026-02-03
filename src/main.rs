@@ -1,8 +1,8 @@
 #![recursion_limit = "512"]
 #[cfg(feature = "ssr")]
-use axum::Router;
-#[cfg(feature = "ssr")]
 use axum::routing::post;
+#[cfg(feature = "ssr")]
+use axum::Router;
 #[cfg(feature = "ssr")]
 use leptos::prelude::*;
 #[cfg(feature = "ssr")]
@@ -11,7 +11,9 @@ use leptos_axum::{generate_route_list, LeptosRoutes};
 use temidaradev_rust::app::*;
 
 #[cfg(feature = "ssr")]
-async fn sse_handler(axum::Extension(tx): axum::Extension<tokio::sync::broadcast::Sender<String>>) -> impl axum::response::IntoResponse {
+async fn sse_handler(
+    axum::Extension(tx): axum::Extension<tokio::sync::broadcast::Sender<String>>,
+) -> impl axum::response::IntoResponse {
     use axum::response::sse::{Event, Sse};
     use tokio_stream::wrappers::BroadcastStream;
     use tokio_stream::StreamExt;
@@ -30,7 +32,6 @@ async fn sse_handler(axum::Extension(tx): axum::Extension<tokio::sync::broadcast
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
-
     dotenvy::dotenv().ok();
 
     let conf = get_configuration(None).unwrap();
@@ -46,24 +47,36 @@ async fn main() {
         use std::path::Path;
 
         let (mut watcher_tx, mut watcher_rx) = tokio::sync::mpsc::channel(100);
-        
+
         let mut watcher = RecommendedWatcher::new(
             move |res| {
                 let _ = watcher_tx.blocking_send(res);
             },
             Config::default(),
-        ).unwrap();
+        )
+        .unwrap();
 
-        if let Err(e) = watcher.watch(Path::new("."), RecursiveMode::Recursive) {
-             eprintln!("Watcher error: {:?}", e);
+        let watch_dirs = ["src", "style", "public", "input.css"];
+        for dir in &watch_dirs {
+            let path = Path::new(dir);
+            if path.exists() {
+                if let Err(e) = watcher.watch(path, RecursiveMode::Recursive) {
+                    eprintln!("Watcher error for {}: {:?}", dir, e);
+                }
+            }
         }
 
         while let Some(res) = watcher_rx.recv().await {
             match res {
                 Ok(event) => {
-                     if matches!(event.kind, notify::EventKind::Modify(_) | notify::EventKind::Create(_) | notify::EventKind::Remove(_)) {
-                         let _ = tx_clone.send("reload".to_string());
-                     }
+                    if matches!(
+                        event.kind,
+                        notify::EventKind::Modify(_)
+                            | notify::EventKind::Create(_)
+                            | notify::EventKind::Remove(_)
+                    ) {
+                        let _ = tx_clone.send("reload".to_string());
+                    }
                 }
                 Err(e) => eprintln!("watch error: {:?}", e),
             }

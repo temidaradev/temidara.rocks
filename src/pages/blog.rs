@@ -1,4 +1,5 @@
 use crate::api::blog::get_repo_readme;
+use crate::components::MandelbrotViewer;
 use leptos::prelude::*;
 use leptos_router::components::A;
 use leptos_router::hooks::use_params_map;
@@ -15,6 +16,13 @@ pub struct BlogPost {
 
 pub fn get_blog_posts() -> Vec<BlogPost> {
     vec![
+        BlogPost {
+            title: "Mandelbrot-rust".to_string(),
+            date: "2026-02-03".to_string(),
+            description: "A Rust implementation of the Mandelbrot set".to_string(),
+            slug: "mandelbrot-rust".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/mandelbrot-rust/refs/heads/master/README.md".to_string(),
+        },
         BlogPost {
             title: "mdif".to_string(),
             date: "2026-01-21".to_string(),
@@ -141,10 +149,16 @@ pub fn BlogPostPage() -> impl IntoView {
                                 "<- back"
                             </A>
                             <h1 class="text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
-                                {p.title}
+                                {p.title.clone()}
                             </h1>
                             <time class="text-xs font-mono text-gray-500">{p.date}</time>
                         </div>
+
+                        {if p.slug == "mandelbrot-rust" {
+                            view! { <MandelbrotViewer /> }.into_any()
+                        } else {
+                            view! { <></> }.into_any()
+                        }}
 
                         <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content)>
                         </div>

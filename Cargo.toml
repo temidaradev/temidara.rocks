@@ -17,7 +17,7 @@ tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
 wasm-bindgen = { version = "0.2.106", optional = true }
 tailwind_fuse = { version = "0.3.2", features = ["variant"]}
 strum = { version = "0.27.2", features = ["derive"] }
-web-sys = { version = "0.3.85", features = ["MouseEvent"] }
+web-sys = { version = "0.3.85", features = ["MouseEvent", "HtmlScriptElement", "HtmlCanvasElement", "Document", "Window", "Element"] }
 reqwest = { version = "0.12", features = ["json"], optional = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", optional = true }
@@ -32,6 +32,11 @@ hydrate = [
     "leptos/hydrate",
     "dep:console_error_panic_hook",
     "dep:wasm-bindgen",
+    "web-sys/HtmlScriptElement",
+    "web-sys/HtmlCanvasElement",
+    "web-sys/Document",
+    "web-sys/Window",
+    "web-sys/Element",
 ]
 ssr = [
     "dep:axum",

@@ -155,8 +155,8 @@ pub fn HomePage() -> impl IntoView {
             <section class="space-y-4">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Activity"</h2>
                 <div class="group relative w-fit overflow-hidden rounded-lg bg-black/20 transition-colors">
-                    <img 
-                        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=12057&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&hide_border=true" 
+                    <img
+                        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=12057&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&hide_border=true"
                         alt="Wakatime Stats"
                         class="h-32 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
                     />
@@ -165,10 +165,37 @@ pub fn HomePage() -> impl IntoView {
 
             <section class="space-y-4">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Socials"</h2>
-                <div class="flex gap-4 text-sm font-mono text-gray-400">
+                <div class="flex flex-wrap gap-4 text-sm font-mono text-gray-400">
                     <a href="mailto:temidaradev@temidara.rocks" class="hover:text-white hover:underline">"email"</a>
                     <a href="https://github.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"github"</a>
                     <a href="https://x.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"twitter"</a>
+                </div>
+                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Cool Buttons"</h2>
+                <div class="flex flex-wrap gap-2 text-sm font-mono text-gray-400" style="flex-wrap: wrap;">
+                    <a href="https://rust-lang.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cyber.dabamos.de/88x31/botao.gif" height="31" />
+                    </a>
+                    <a href="https://www.qbittorrent.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://meltingsnow.neocities.org/images/88x31piracy.gif" height="31" />
+                    </a>
+                    <a href="https://github.com/temidaradev" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cyber.dabamos.de/88x31/github.gif" height="31" />
+                    </a>
+                    <a href="https://88x31.nl/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://88x31.nl/gifs/nicesite.png" height="31" />
+                    </a>
+                    <a href="https://nixos.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://images.melonland.net/?url=https%3A%2F%2Fcrazyroostereye.de%2Fstuff%2Fnixos.png&w=1200&fit=inside&we&q=85&il&n=-1&default=1" height="31" />
+                    </a>
+                    <a href="https://duckduckgo.com/?q=hatsune+miku&ia=web" target="_blank" rel="noopener noreferrer">
+                        <img src="https://chronocide.neocities.org/assets/88x31/miku.gif" height="31" />
+                    </a>
+                    <a href="https://duckduckgo.com/?q=kasane+teto&ia=web" target="_blank" rel="noopener noreferrer">
+                        <img src="https://meltingsnow.neocities.org/images/tb_teto.gif" height="31" />
+                    </a>
+                    <a href="http://www.slsknet.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cyber.dabamos.de/88x31/soulseek.gif" height="31" />
+                    </a>
                 </div>
             </section>
         </div>

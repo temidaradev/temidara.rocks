@@ -871,6 +871,10 @@ h1,
   resize: none;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .items-center {
   align-items: center;
 }

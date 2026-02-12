@@ -10,6 +10,21 @@ pub fn ExperiencePage() -> impl IntoView {
                 <section class="space-y-6">
                     <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Work"</h2>
                     <div class="space-y-8">
+                        <div class="group">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <h3 class="font-bold text-white">"Course Tester / Reviewer"</h3>
+                                <span class="text-xs font-mono text-gray-500">"Feb 2026 - Present"</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mb-2">
+                                "at " <a href="https://threedots.tech" target="_blank" class="hover:text-white hover:underline">"Three Dots Labs"</a>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-2">
+                                "Early access alpha tester. Focusing on Domain-Driven Design and Go Backend patterns."
+                            </p>
+                             <div class="text-[10px] font-mono text-gray-600">
+                                "[Go, DDD, Architecture]"
+                            </div>
+                        </div>
                          <div class="group">
                             <div class="flex justify-between items-baseline mb-1">
                                 <h3 class="font-bold text-white">"Game Developer"</h3>

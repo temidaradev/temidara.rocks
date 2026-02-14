@@ -196,6 +196,11 @@ pub fn HomePage() -> impl IntoView {
                     <a href="http://www.slsknet.org/" target="_blank" rel="noopener noreferrer">
                         <img src="https://cyber.dabamos.de/88x31/soulseek.gif" height="31" />
                     </a>
+                    <img src="https://88x31.nl/gifs/168.gif" height="31" />
+                    <img src="https://88x31.nl/gifs/blends.gif" height="31" />
+                    <img src="https://88x31.nl/gifs/caramelldansen.gif" height="31" />
+                    <img src="https://88x31.nl/gifs/ralseismokingadart.gif" height="31" />
+                    <img src="https://88x31.nl/gifs/verine.gif" height="31" />
                 </div>
             </section>
         </div>

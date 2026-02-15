@@ -201,6 +201,11 @@ pub fn HomePage() -> impl IntoView {
                     <img src="https://88x31.nl/gifs/caramelldansen.gif" height="31" />
                     <img src="https://88x31.nl/gifs/ralseismokingadart.gif" height="31" />
                     <img src="https://88x31.nl/gifs/verine.gif" height="31" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/dramaturgie.gif" height="31" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/hekate.gif" height="31" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/j04q1x.png" height="31" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/nyaabanner.gif" height="31" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/vocaloid.gif" height="31" />
                 </div>
             </section>
         </div>

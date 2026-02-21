@@ -18,16 +18,16 @@ pub fn HomePage() -> impl IntoView {
         });
     });
 
-    let plex_resource = Resource::new(
+    let jellyfin_resource = Resource::new(
         move || trigger.get(),
         |_| async move {
-            crate::api::plex::get_plex_current_track()
+            crate::api::jellyfin::get_jellyfin_current_track()
                 .await
                 .unwrap_or(None)
         },
     );
     let thumb_url = move || {
-        plex_resource
+        jellyfin_resource
             .get()
             .flatten()
             .and_then(|track| track.thumb_url)
@@ -76,7 +76,7 @@ pub fn HomePage() -> impl IntoView {
                             }.into_any()
                         };
 
-                        match plex_resource.get() {
+                        match jellyfin_resource.get() {
                             Some(Some(track)) => {
                                 let status_view = if track.status == "playing" {
                                     view! {

@@ -10,10 +10,10 @@ A personal portfolio website built with Rust, Leptos, and TailwindCSS.
 - `src/lib.rs`: Library entry point, handles hydration for the client-side.
 - `src/app.rs`: Main application component, establishes the router and layout.
 - `src/pages/`: Contains individual page components.
-    - `home.rs`: The landing page with the hero section and Plex integration.
+    - `home.rs`: The landing page with the hero section and Jellyfin integration.
     - `blog.rs`, `contact.rs`, `experiences.rs`: Placeholder modules for future content.
 - `src/components/`: Reusable UI components (NavBar, Cards, etc.).
-- `src/api/`: Backend API integrations (e.g., Plex).
+- `src/api/`: Backend API integrations (e.g., Jellyfin).
 
 ## Usage
 

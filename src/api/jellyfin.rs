@@ -55,7 +55,7 @@ struct JellyfinPlayState {
     is_paused: Option<bool>,
 }
 
-#[server]
+#[server(GetJellyfinCurrentTrack, "/api")]
 pub async fn get_jellyfin_current_track() -> Result<Option<TrackInfo>, ServerFnError> {
     use reqwest::Client;
     use std::env;
@@ -87,92 +87,99 @@ pub async fn get_jellyfin_current_track() -> Result<Option<TrackInfo>, ServerFnE
     match resp {
         Ok(response) => {
             let status = response.status();
-            if status.is_success() {
-                let body = response.text().await?;
-
-                let sessions: Vec<JellyfinSession> = match serde_json::from_str(&body) {
-                    Ok(s) => s,
-                    Err(e) => {
-                        eprintln!("[jellyfin] Failed to parse sessions: {}", e);
-                        eprintln!("[jellyfin] Response body: {}", &body[..body.len().min(500)]);
-                        return Ok(None);
-                    }
-                };
-
-                eprintln!("[jellyfin] Found {} sessions", sessions.len());
-
-                let track = sessions.into_iter().find(|s| {
-                    if let Some(item) = &s.now_playing_item {
-                        eprintln!(
-                            "[jellyfin] Session has item: {} (type: {})",
-                            item.name, item.media_type
-                        );
-                        item.media_type == "Audio"
-                    } else {
-                        false
-                    }
-                });
-
-                if let Some(session) = track {
-                    if let Some(item) = session.now_playing_item {
-                        let is_paused = session
-                            .play_state
-                            .and_then(|ps| ps.is_paused)
-                            .unwrap_or(false);
-
-                        let status = if is_paused {
-                            "paused".to_string()
-                        } else {
-                            "playing".to_string()
-                        };
-
-                        let thumb_url = format!(
-                            "{}/Items/{}/Images/Primary?fillHeight=300&fillWidth=300&quality=96",
-                            jellyfin_url, item.id
-                        );
-
-                        let artist = item
-                            .artists
-                            .as_ref()
-                            .filter(|a| !a.is_empty())
-                            .map(|a| a.join(", "))
-                            .or_else(|| {
-                                item.album_artists
-                                    .as_ref()
-                                    .filter(|a| !a.is_empty())
-                                    .map(|a| {
-                                        a.iter()
-                                            .map(|ai| ai.name.clone())
-                                            .collect::<Vec<_>>()
-                                            .join(", ")
-                                    })
-                            })
-                            .unwrap_or_else(|| "Unknown Artist".to_string());
-
-                        eprintln!(
-                            "[jellyfin] Now playing: {} - {} ({})",
-                            artist, item.name, status
-                        );
-
-                        return Ok(Some(TrackInfo {
-                            title: item.name,
-                            artist,
-                            album: item.album.unwrap_or_else(|| "Unknown Album".to_string()),
-                            year: item.production_year.map(|y| y.to_string()),
-                            thumb_url: Some(thumb_url),
-                            status,
-                        }));
-                    }
-                } else {
-                    eprintln!("[jellyfin] No audio session found");
-                }
-            } else {
+            if !status.is_success() {
                 let body = response.text().await.unwrap_or_default();
                 eprintln!(
                     "[jellyfin] API returned status {}: {}",
                     status,
                     &body[..body.len().min(300)]
                 );
+                return Ok(None);
+            }
+
+            let body = match response.text().await {
+                Ok(b) => b,
+                Err(e) => {
+                    eprintln!("[jellyfin] Failed to read response body: {}", e);
+                    return Ok(None);
+                }
+            };
+
+            let sessions: Vec<JellyfinSession> = match serde_json::from_str(&body) {
+                Ok(s) => s,
+                Err(e) => {
+                    eprintln!("[jellyfin] Failed to parse sessions: {}", e);
+                    eprintln!("[jellyfin] Response body: {}", &body[..body.len().min(500)]);
+                    return Ok(None);
+                }
+            };
+
+            eprintln!("[jellyfin] Found {} sessions", sessions.len());
+
+            let track = sessions.into_iter().find(|s| {
+                if let Some(item) = &s.now_playing_item {
+                    eprintln!(
+                        "[jellyfin] Session has item: {} (type: {})",
+                        item.name, item.media_type
+                    );
+                    item.media_type == "Audio"
+                } else {
+                    false
+                }
+            });
+
+            if let Some(session) = track {
+                if let Some(item) = session.now_playing_item {
+                    let is_paused = session
+                        .play_state
+                        .and_then(|ps| ps.is_paused)
+                        .unwrap_or(false);
+
+                    let status = if is_paused {
+                        "paused".to_string()
+                    } else {
+                        "playing".to_string()
+                    };
+
+                    let thumb_url = format!(
+                        "{}/Items/{}/Images/Primary?fillHeight=300&fillWidth=300&quality=96",
+                        jellyfin_url, item.id
+                    );
+
+                    let artist = item
+                        .artists
+                        .as_ref()
+                        .filter(|a| !a.is_empty())
+                        .map(|a| a.join(", "))
+                        .or_else(|| {
+                            item.album_artists
+                                .as_ref()
+                                .filter(|a| !a.is_empty())
+                                .map(|a| {
+                                    a.iter()
+                                        .map(|ai| ai.name.clone())
+                                        .collect::<Vec<_>>()
+                                        .join(", ")
+                                })
+                        })
+                        .unwrap_or_else(|| "Unknown Artist".to_string());
+
+                    eprintln!(
+                        "[jellyfin] Now playing: {} - {} ({})",
+                        artist, item.name, status
+                    );
+
+                    return Ok(Some(TrackInfo {
+                        title: item.name,
+                        artist,
+                        album: item.album.unwrap_or_else(|| "Unknown Album".to_string()),
+                        year: item.production_year.map(|y| y.to_string()),
+                        thumb_url: Some(thumb_url),
+                        status,
+                    }));
+                }
+            } else {
+                eprintln!("[jellyfin] No audio session found");
             }
         }
         Err(e) => {

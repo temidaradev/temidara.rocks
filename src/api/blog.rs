@@ -7,7 +7,7 @@ pub struct BlogInfo {
     pub text: String,
 }
 
-#[server]
+#[server(GetRepoReadme, "/api")]
 pub async fn get_repo_readme(path: String) -> Result<String, ServerFnError> {
     let text = reqwest::get(path)
         .await?;

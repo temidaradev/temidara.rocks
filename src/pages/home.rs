@@ -187,6 +187,7 @@ pub fn HomePage() -> impl IntoView {
                     <a href="https://nixos.org/" target="_blank" rel="noopener noreferrer">
                         <img src="https://images.melonland.net/?url=https%3A%2F%2Fcrazyroostereye.de%2Fstuff%2Fnixos.png&w=1200&fit=inside&we&q=85&il&n=-1&default=1" height="31" />
                     </a>
+                    <img src="https://2k2pea.ch/88x31/nixos.gif" height="31" />
                     <a href="https://duckduckgo.com/?q=hatsune+miku&ia=web" target="_blank" rel="noopener noreferrer">
                         <img src="https://chronocide.neocities.org/assets/88x31/miku.gif" height="31" />
                     </a>

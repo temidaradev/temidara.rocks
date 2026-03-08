@@ -145,8 +145,8 @@ pub fn HomePage() -> impl IntoView {
                     </div>
 
                     <div class="group">
-                        <a href="https://github.com/temidaradev/nixos" class="text-white hover:underline font-medium">"dotfiles"</a>
-                        <p class="text-gray-400 text-sm">"NixOS configuration and system setup."</p>
+                        <a href="https://github.com/temidaradev/rusic" class="text-white hover:underline font-medium">"Rusic"</a>
+                        <p class="text-gray-400 text-sm">"Music player, but written in rust."</p>
                         <p class="text-gray-500 text-xs">"-> github.com"</p>
                     </div>
                 </div>

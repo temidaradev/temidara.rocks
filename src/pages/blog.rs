@@ -17,11 +17,11 @@ pub struct BlogPost {
 pub fn get_blog_posts() -> Vec<BlogPost> {
     vec![
         BlogPost {
-            title: "Rusic".to_string(),
+            title: "Kopuz".to_string(),
             date: "2026.03.08".to_string(),
             description: "A music player but written in rust".to_string(),
-            slug: "rusic".to_string(),
-            readme_url: "https://raw.githubusercontent.com/temidaradev/rusic/refs/heads/master/README.md".to_string(),
+            slug: "kopuz".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/kopuz/refs/heads/master/README.md".to_string(),
         },
         BlogPost {
             title: "DeneyapA1V2 Bad Apple".to_string(),
@@ -139,7 +139,8 @@ pub fn BlogPostPage() -> impl IntoView {
                 let content = get_repo_readme(post.readme_url.clone())
                     .await
                     .unwrap_or_default();
-                Some((post, content))
+                let base = readme_base_url(&post.readme_url);
+                Some((post, content, base))
             } else {
                 None
             }
@@ -149,7 +150,7 @@ pub fn BlogPostPage() -> impl IntoView {
     view! {
         <Suspense fallback=move || view! { <div class="font-mono text-sm text-gray-500">"loading..."</div> }>
             {move || match post_resource.get().flatten() {
-                Some((p, content)) => view! {
+                Some((p, content, base)) => view! {
                     <article class="max-w-none">
                         <div class="mb-12 border-b border-white/10 pb-8">
                             <A href="/blog" attr:class="no-underline text-xs font-mono text-gray-500 hover:text-white mb-6 block">
@@ -167,7 +168,7 @@ pub fn BlogPostPage() -> impl IntoView {
                             view! { <></> }.into_any()
                         }}
 
-                        <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content)>
+                        <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content, &base)>
                         </div>
                     </article>
                 }.into_any(),
@@ -184,7 +185,7 @@ pub fn BlogPostPage() -> impl IntoView {
     }
 }
 
-fn md_to_html(md: &str) -> String {
+fn md_to_html(md: &str, base_url: &str) -> String {
     use pulldown_cmark::{CowStr, Event, Options, Parser, Tag, TagEnd};
 
     let mut options = Options::empty();
@@ -223,6 +224,26 @@ fn md_to_html(md: &str) -> String {
                     replaced = true;
                 }
             }
+            Event::Start(Tag::Image {
+                link_type,
+                dest_url,
+                title,
+                id,
+            }) => {
+                let resolved = resolve_url(dest_url, base_url);
+                new_events.push(Event::Start(Tag::Image {
+                    link_type: *link_type,
+                    dest_url: CowStr::from(resolved),
+                    title: title.clone(),
+                    id: id.clone(),
+                }));
+                replaced = true;
+            }
+            Event::Html(html) | Event::InlineHtml(html) => {
+                let rewritten = rewrite_html_urls(html, base_url);
+                new_events.push(Event::Html(CowStr::from(rewritten)));
+                replaced = true;
+            }
             _ => {}
         }
 
@@ -234,6 +255,69 @@ fn md_to_html(md: &str) -> String {
     let mut html_output = String::new();
     pulldown_cmark::html::push_html(&mut html_output, new_events.into_iter());
     html_output
+}
+
+fn readme_base_url(readme_url: &str) -> String {
+    match readme_url.rfind('/') {
+        Some(idx) => readme_url[..=idx].to_string(),
+        None => String::new(),
+    }
+}
+
+fn resolve_url(url: &str, base: &str) -> String {
+    let trimmed = url.trim();
+    if trimmed.is_empty()
+        || trimmed.starts_with("http://")
+        || trimmed.starts_with("https://")
+        || trimmed.starts_with("data:")
+        || trimmed.starts_with("mailto:")
+        || trimmed.starts_with('#')
+        || trimmed.starts_with("//")
+    {
+        return url.to_string();
+    }
+    if trimmed.starts_with('/') {
+        if let Some(scheme_end) = base.find("://") {
+            let rest = &base[scheme_end + 3..];
+            if let Some(slash) = rest.find('/') {
+                return format!("{}{}", &base[..scheme_end + 3 + slash], trimmed);
+            }
+            return format!("{}{}", base.trim_end_matches('/'), trimmed);
+        }
+    }
+    format!("{}{}", base, trimmed)
+}
+
+fn rewrite_html_urls(html: &str, base: &str) -> String {
+    let mut out = String::with_capacity(html.len());
+    let bytes = html.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        let rest = &html[i..];
+        let attr = if rest.starts_with("src=\"") || rest.starts_with("SRC=\"") {
+            Some(5)
+        } else if rest.starts_with("href=\"") || rest.starts_with("HREF=\"") {
+            Some(6)
+        } else {
+            None
+        };
+        if let Some(off) = attr {
+            let value_start = i + off;
+            if let Some(end_rel) = html[value_start..].find('"') {
+                let value_end = value_start + end_rel;
+                let value = &html[value_start..value_end];
+                out.push_str(&html[i..value_start]);
+                out.push_str(&resolve_url(value, base));
+                out.push('"');
+                i = value_end + 1;
+                continue;
+            }
+        }
+        let ch = html[i..].chars().next().unwrap();
+        out.push(ch);
+        i += ch.len_utf8();
+    }
+    out
 }
 
 fn is_video_url(url: &str) -> bool {

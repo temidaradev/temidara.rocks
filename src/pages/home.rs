@@ -127,6 +127,18 @@ pub fn HomePage() -> impl IntoView {
                 <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Projects"</h2>
                 <div class="grid gap-4">
                     <div class="group">
+                        <div class="flex items-center gap-2">
+                            <a href="https://github.com/temidaradev/kopuz" class="text-white hover:underline font-medium">"Kopuz"</a>
+                            <span class="flex items-center gap-1 text-[10px] uppercase tracking-wider font-mono text-green-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                "currently working on"
+                            </span>
+                        </div>
+                        <p class="text-gray-400 text-sm">"Music player, but written in rust."</p>
+                        <p class="text-gray-500 text-xs">"-> github.com"</p>
+                    </div>
+
+                    <div class="group">
                         <a href="https://crates.io/crates/mdif" class="text-white hover:underline font-medium">"mdif"</a>
                         <p class="text-gray-400 text-sm">"Terminal-based disk usage analyzer."</p>
                         <p class="text-gray-500 text-xs">"-> crates.io"</p>
@@ -142,12 +154,6 @@ pub fn HomePage() -> impl IntoView {
                         <a href="https://www.pling.com/p/2334389/" class="text-white hover:underline font-medium">"fastfetchus"</a>
                         <p class="text-gray-400 text-sm">"KDE Plasma widget for fastfetch."</p>
                         <p class="text-gray-500 text-xs">"-> pling.com"</p>
-                    </div>
-
-                    <div class="group">
-                        <a href="https://github.com/temidaradev/rusic" class="text-white hover:underline font-medium">"Rusic"</a>
-                        <p class="text-gray-400 text-sm">"Music player, but written in rust."</p>
-                        <p class="text-gray-500 text-xs">"-> github.com"</p>
                     </div>
                 </div>
             </section>

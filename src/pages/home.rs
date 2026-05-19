@@ -61,11 +61,21 @@ pub fn HomePage() -> impl IntoView {
                     {move || {
                         let art_view = move || match thumb_url() {
                             Some(url) => view! {
-                                <div class="w-16 h-16 rounded-lg overflow-hidden shadow-lg group-hover:shadow-[#e5a00d]/20 transition-shadow duration-300">
+                                <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-[#e5a00d]/20 bg-[#e5a00d]/10 shadow-lg group-hover:shadow-[#e5a00d]/20 transition-shadow duration-300">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa-solid fa-music text-[#e5a00d]/50 text-xl"></i>
+                                    </div>
                                     <img
                                         src=url
-                                        alt="Album Art"
-                                        class="w-full h-full object-cover"
+                                        alt=""
+                                        loading="lazy"
+                                        class="relative w-full h-full object-cover"
+                                        on:error=|ev| {
+                                            use leptos::wasm_bindgen::JsCast;
+                                            if let Some(img) = ev.target().and_then(|t| t.dyn_into::<leptos::web_sys::HtmlElement>().ok()) {
+                                                let _ = img.style().set_property("display", "none");
+                                            }
+                                        }
                                     />
                                 </div>
                             }.into_any(),

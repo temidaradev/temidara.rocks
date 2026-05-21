@@ -13,7 +13,7 @@ pub fn ExperiencePage() -> impl IntoView {
                         <div class="group">
                             <div class="flex justify-between items-baseline mb-1">
                                 <h3 class="font-bold text-white">"Course Tester / Reviewer"</h3>
-                                <span class="text-xs font-mono text-gray-500">"Feb 2026 - Present"</span>
+                                <span class="text-xs font-mono text-gray-500">"Feb 2026 - Mar 2026"</span>
                             </div>
                             <div class="text-xs text-gray-500 mb-2">
                                 "at " <a href="https://threedots.tech" target="_blank" class="hover:text-white hover:underline">"Three Dots Labs"</a>
@@ -25,10 +25,25 @@ pub fn ExperiencePage() -> impl IntoView {
                                 "[Go, DDD, Architecture]"
                             </div>
                         </div>
+                        <div class="group">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <h3 class="font-bold text-white">"Watermill Maintainer"</h3>
+                                <span class="text-xs font-mono text-gray-500">"May 2026 - Present"</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mb-2">
+                                "at " <a href="https://threedots.tech" target="_blank" class="hover:text-white hover:underline">"Three Dots Labs"</a>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-2">
+                                "Maintainer and developer on " <a href="https://watermill.io" target="_blank" class="hover:text-white hover:underline">"Watermill"</a> ", Go library for working efficiently with message streams."
+                            </p>
+                             <div class="text-[10px] font-mono text-gray-600">
+                                "[Go, Messaging, OSS, Event Driven]"
+                            </div>
+                        </div>
                          <div class="group">
                             <div class="flex justify-between items-baseline mb-1">
                                 <h3 class="font-bold text-white">"Game Developer"</h3>
-                                <span class="text-xs font-mono text-gray-500">"Sep 2024 - Present"</span>
+                                <span class="text-xs font-mono text-gray-500">"Sep 2024 - Sep 2025"</span>
                             </div>
                             <div class="text-xs text-gray-500 mb-2">
                                 "at " <a href="https://github.com/jinchuugames" target="_blank" class="hover:text-white hover:underline">"jinchuugames"</a>

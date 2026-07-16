@@ -2,7 +2,7 @@
 
 A personal portfolio website built with Rust, [Leptos](https://leptos.dev/) (SSR + hydration), and TailwindCSS.
 
-<img width="743" height="1076" alt="image" src="https://github.com/user-attachments/assets/2659e414-1497-42fb-a621-12e6e5f45e24" />
+<img width="819" height="1293" alt="image" src="https://github.com/user-attachments/assets/05a1a9a6-7e8c-4ee5-8c06-9369d87e2eac" />
 
 ## Features
 

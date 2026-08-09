@@ -20,19 +20,30 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500,600|outfit:400,500,600,700" rel="stylesheet" />
-                <script>
-                    "use strict";
-                    (function() {
-                        const evtSource = new EventSource("/reload-events");
-                        evtSource.onmessage = function(event) {
-                            console.log("Reloading due to server change...");
-                            window.location.reload();
-                        };
-                        evtSource.onerror = function(err) {
-                            console.error("EventSource failed:", err);
-                        };
-                    })();
-                </script>
+                {
+                    // Live-reload client (development builds only). Mirrors the
+                    // `#[cfg(debug_assertions)]`-gated /reload-events SSE endpoint
+                    // in main.rs, which does not exist in release builds.
+                    #[cfg(debug_assertions)]
+                    let reload = view! {
+                        <script>
+                            "use strict";
+                            (function() {
+                                const evtSource = new EventSource("/reload-events");
+                                evtSource.onmessage = function(event) {
+                                    console.log("Reloading due to server change...");
+                                    window.location.reload();
+                                };
+                                evtSource.onerror = function(err) {
+                                    console.error("EventSource failed:", err);
+                                };
+                            })();
+                        </script>
+                    }.into_any();
+                    #[cfg(not(debug_assertions))]
+                    let reload = ().into_any();
+                    reload
+                }
                 <HydrationScripts options/>
                 <MetaTags/>
                 {

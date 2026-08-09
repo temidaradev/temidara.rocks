@@ -26,49 +26,75 @@ pub fn HomePage() -> impl IntoView {
                 .unwrap_or(None)
         },
     );
-    let thumb_url = move || {
-        music_resource
-            .get()
-            .flatten()
-            .and_then(|track| track.thumb_url)
-    };
+
+    let (thumb_url, set_thumb_url) = signal(None::<String>);
+    let (current_track, set_current_track) = signal(None::<crate::api::music::TrackInfo>);
+    Effect::new(move |_| {
+        if let Some(Some(track)) = music_resource.get() {
+            if current_track.get_untracked().as_ref() != Some(&track) {
+                set_current_track.set(Some(track));
+            }
+        }
+    });
+
+    let cover_resource = Resource::new(
+        move || {
+            current_track
+                .get()
+                .map(|track| crate::api::music::CoverArtQuery {
+                    title: track.title,
+                    artist: track.artist,
+                    album: track.album,
+                    release_mbid: track.release_mbid,
+                })
+        },
+        |query| async move {
+            match query {
+                Some(query) => crate::api::music::get_cover_art(query)
+                    .await
+                    .unwrap_or(None),
+                None => None,
+            }
+        },
+    );
+
+    Effect::new(move |_| {
+        if let Some(Some(url)) = cover_resource.get() {
+            if thumb_url.get_untracked().as_ref() != Some(&url) {
+                set_thumb_url.set(Some(url));
+            }
+        }
+    });
+
     view! {
-        <div class="space-y-8">
-            <section class="space-y-4">
-                <h1 class="text-xl font-bold tracking-tight text-white">"temidaradev"</h1>
-                <div class="text-sm space-y-1 text-gray-400 font-mono">
-                    <p>"-> systems developer & student"</p>
-                    <p>"-> 17 years old"</p>
-                    <p>"-> located in türkiye"</p>
+        <div class="space-y-12">
+            <section class="home-intro">
+                <div class="max-w-2xl">
+                    <h1 class="text-3xl font-semibold tracking-tight text-white">"temidaradev"</h1>
+                    <p class="mt-2 font-mono text-xs text-primary">"systems engineer & student"</p>
+                    <p class="mt-6 text-base leading-7 text-gray-300">
+                        "I build systems software and developer tools, mostly in Rust and Go. Lately I have been working on distributed backends, embedded systems, and emulating hardware I do not own."
+                    </p>
+                    <div class="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-gray-600">
+                        <span>"17"</span>
+                        <span>"türkiye"</span>
+                        <span>"rust / go / nix"</span>
+                    </div>
                 </div>
 
-                <p class="max-w-xl text-sm leading-relaxed text-gray-300">
-                    "I enjoy building high-performance systems and tools. Currently exploring embedded development and OS design. Writing Rust, Go, and TypeScript."
-                </p>
-
-                <Transition fallback=move || view! {
-                    <div class="flex items-center gap-4 pt-3 border-t border-white/10">
-                        <div class="relative flex-shrink-0">
-                            <div class="w-16 h-16 rounded-lg bg-[#e5a00d]/10 flex items-center justify-center border border-[#e5a00d]/20">
-                                <i class="fa-solid fa-music text-[#e5a00d]/50 text-xl"></i>
-                            </div>
-                        </div>
-                        <div class="text-[10px] uppercase tracking-wider font-mono text-gray-600">
-                            "// media server offline"
-                        </div>
-                    </div>
-                }>
-                    {move || {
-                        let art_view = move || match thumb_url() {
+                <div class="now-playing grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-5">
+                    <div class="relative flex-shrink-0">
+                        {move || match thumb_url.get() {
                             Some(url) => view! {
-                                <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-[#e5a00d]/20 bg-[#e5a00d]/10 shadow-lg group-hover:shadow-[#e5a00d]/20 transition-shadow duration-300">
+                                <div class="relative h-20 w-20 overflow-hidden border border-white/10 bg-white/[0.03] sm:h-24 sm:w-24">
                                     <div class="absolute inset-0 flex items-center justify-center">
-                                        <i class="fa-solid fa-music text-[#e5a00d]/50 text-xl"></i>
+                                        <i class="fa-solid fa-music text-2xl text-gray-700"></i>
                                     </div>
                                     <img
                                         src=url
                                         alt=""
-                                        loading="lazy"
+                                        loading="eager"
+                                        fetchpriority="high"
                                         class="relative w-full h-full object-cover"
                                         on:error=|ev| {
                                             use leptos::wasm_bindgen::JsCast;
@@ -80,114 +106,113 @@ pub fn HomePage() -> impl IntoView {
                                 </div>
                             }.into_any(),
                             None => view! {
-                                <div class="w-16 h-16 rounded-lg bg-[#e5a00d]/10 flex items-center justify-center border border-[#e5a00d]/20">
-                                    <i class="fa-solid fa-music text-[#e5a00d]/50 text-xl"></i>
+                                <div class="flex h-20 w-20 items-center justify-center border border-white/10 bg-white/[0.03] sm:h-24 sm:w-24">
+                                    <i class="fa-solid fa-music text-2xl text-gray-700"></i>
                                 </div>
                             }.into_any()
-                        };
+                        }}
+                    </div>
 
-                        match music_resource.get() {
-                            Some(Some(track)) => {
+                    <div class="min-w-0">
+                        {move || match current_track.get() {
+                            Some(track) => {
                                 let status_view = if track.status == "playing" {
                                     view! {
-                                        <div class="flex items-center gap-2 text-green-400">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                        <div class="flex items-center gap-2 font-mono text-green-400">
                                             <span class="text-[10px] uppercase tracking-wider">"listening now"</span>
                                         </div>
                                     }.into_any()
                                 } else {
                                     view! {
-                                        <div class="flex items-center gap-2 text-yellow-500">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                                            <span class="text-[10px] uppercase tracking-wider">"paused"</span>
+                                        <div class="flex items-center gap-2 font-mono text-gray-500">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                                            <span class="text-[10px] uppercase tracking-wider">"last listened"</span>
                                         </div>
                                     }.into_any()
                                 };
 
                                 view! {
-                                    <div class="flex items-center gap-4 pt-3 border-t border-white/10">
-                                        <div class="relative flex-shrink-0">
-                                            {art_view}
-                                        </div>
-                                        <div class="text-xs font-mono">
-                                            {status_view}
-                                            <div class="mt-1 text-white truncate max-w-sm">
-                                                {track.artist} " - " {track.title}
-                                            </div>
-                                        </div>
+                                    <div class="min-w-0">
+                                        {status_view}
+                                        <p class="mt-2 break-words text-base font-semibold leading-snug text-white sm:mt-3 sm:text-xl">
+                                            {track.title}
+                                        </p>
+                                        <p class="mt-1 font-mono text-[11px] text-gray-500">
+                                            {track.artist} <span class="text-gray-700">" / "</span> {track.album}
+                                        </p>
                                     </div>
                                 }.into_any()
                             },
                             _ => view! {
-                                <div class="flex items-center gap-4 pt-3 border-t border-white/10">
-                                    <div class="relative flex-shrink-0">
-                                        {art_view}
-                                    </div>
-                                    <div class="text-[10px] uppercase tracking-wider font-mono text-gray-600">
-                                        "// music paused"
-                                    </div>
+                                <div class="flex items-center gap-2 font-mono text-gray-600">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
+                                    <span class="text-[10px] uppercase tracking-wider">"music unavailable"</span>
                                 </div>
                             }.into_any()
-                        }
-                    }}
-                </Transition>
+                        }}
+                    </div>
+
+                </div>
             </section>
 
             <section class="space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Projects"</h2>
-                <div class="grid gap-4">
-                    <div class="group">
-                        <div class="flex items-center gap-2">
-                            <a href="https://github.com/temidaradev/kopuz" class="text-white hover:underline font-medium">"Kopuz"</a>
-                            <span class="flex items-center gap-1 text-[10px] uppercase tracking-wider font-mono text-green-400">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                "currently working on"
+                <h2 class="section-heading">"Projects"</h2>
+                <div class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
+                    <a href="https://github.com/temidaradev/kopuz" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
+                        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <span class="flex items-center gap-2 font-medium text-white group-hover:underline">
+                                "Kopuz"
+                                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
                             </span>
+                            <span class="font-mono text-[9px] text-gray-700">"rust / github ↗"</span>
                         </div>
-                        <p class="text-gray-400 text-sm">"Music player, but written in rust."</p>
-                        <p class="text-gray-500 text-xs">"-> github.com"</p>
-                    </div>
+                        <p class="mt-1 text-sm text-gray-500">"Music player, but written in Rust."</p>
+                    </a>
 
-                    <div class="group">
-                        <a href="https://crates.io/crates/mdif" class="text-white hover:underline font-medium">"mdif"</a>
-                        <p class="text-gray-400 text-sm">"Terminal-based disk usage analyzer."</p>
-                        <p class="text-gray-500 text-xs">"-> crates.io"</p>
-                    </div>
+                    <a href="https://crates.io/crates/mdif" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
+                        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <span class="font-medium text-white group-hover:underline">"mdif"</span>
+                            <span class="font-mono text-[9px] text-gray-700">"rust / crates.io ↗"</span>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">"Terminal-based disk usage analyzer."</p>
+                    </a>
 
-                    <div class="group">
-                        <a href="https://github.com/temidaradev/NeuralRust" class="text-white hover:underline font-medium">"neural-rust"</a>
-                        <p class="text-gray-400 text-sm">"Neural network implementation from scratch."</p>
-                        <p class="text-gray-500 text-xs">"-> github.com"</p>
-                    </div>
+                    <a href="https://github.com/temidaradev/NeuralRust" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
+                        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <span class="font-medium text-white group-hover:underline">"neural-rust"</span>
+                            <span class="font-mono text-[9px] text-gray-700">"rust / github ↗"</span>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">"Neural network implementation from scratch."</p>
+                    </a>
 
-                    <div class="group">
-                        <a href="https://www.pling.com/p/2334389/" class="text-white hover:underline font-medium">"fastfetchus"</a>
-                        <p class="text-gray-400 text-sm">"KDE Plasma widget for fastfetch."</p>
-                        <p class="text-gray-500 text-xs">"-> pling.com"</p>
-                    </div>
+                    <a href="https://www.pling.com/p/2334389/" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
+                        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <span class="font-medium text-white group-hover:underline">"fastfetchus"</span>
+                            <span class="font-mono text-[9px] text-gray-700">"plasma / pling ↗"</span>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">"KDE Plasma widget for fastfetch."</p>
+                    </a>
                 </div>
+                <a href="/projects" class="inline-block font-mono text-[10px] text-gray-600 hover:text-white">"all projects ->"</a>
             </section>
 
-            <section class="space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Activity"</h2>
-                <div class="group relative w-fit overflow-hidden rounded-lg bg-black/20 transition-colors">
-                    <img
-                        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=12057&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&hide_border=true"
-                        alt="Wakatime Stats"
-                        class="h-32 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
-                    />
-                </div>
-            </section>
+            <crate::components::StatusSection />
 
             <section class="space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Socials"</h2>
+                <h2 class="section-heading">"Socials"</h2>
                 <div class="flex flex-wrap gap-4 text-sm font-mono text-gray-400">
                     <a href="mailto:temidaradev@temidara.rocks" class="hover:text-white hover:underline">"email"</a>
                     <a href="https://github.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"github"</a>
                     <a href="https://x.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"twitter"</a>
                 </div>
-                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Cool Buttons"</h2>
-                <div class="flex flex-wrap gap-2 text-sm font-mono text-gray-400" style="flex-wrap: wrap;">
+            </section>
+
+            <section class="space-y-4">
+                <div>
+                    <h2 class="section-heading">"Internet shelf"</h2>
+                    <p class="mt-1 text-xs text-gray-700">"small pieces of the web I like"</p>
+                </div>
+                <div class="button-shelf flex flex-wrap gap-1">
                     <a href="https://rust-lang.org/" target="_blank" rel="noopener noreferrer">
                         <img src="https://cyber.dabamos.de/88x31/botao.gif" height="31" />
                     </a>

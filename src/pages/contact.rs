@@ -39,7 +39,7 @@ pub fn ContactPage() -> impl IntoView {
 
     view! {
         <div class="space-y-8">
-            <h1 class="text-xl font-bold tracking-tight text-white">"contact"</h1>
+            <h1 class="page-title">"contact"</h1>
 
             <form on:submit=on_submit class="max-w-md space-y-4">
                 <div class="grid sm:grid-cols-2 gap-4">
@@ -48,7 +48,7 @@ pub fn ContactPage() -> impl IntoView {
                         <input
                             type="text"
                             required
-                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-primary/40 focus:outline-none"
                             prop:value=move || name.get()
                             on:input=move |ev| set_name.set(event_target_value(&ev))
                         />
@@ -59,7 +59,7 @@ pub fn ContactPage() -> impl IntoView {
                         <input
                             type="email"
                             required
-                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+                            class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-primary/40 focus:outline-none"
                             prop:value=move || email.get()
                             on:input=move |ev| set_email.set(event_target_value(&ev))
                         />
@@ -71,7 +71,7 @@ pub fn ContactPage() -> impl IntoView {
                     <textarea
                         required
                         rows="4"
-                        class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors resize-none"
+                        class="w-full bg-[#111] border border-white/10 p-2 text-sm text-white focus:border-primary/40 focus:outline-none resize-none"
                         prop:value=move || message.get()
                         on:input=move |ev| set_message.set(event_target_value(&ev))
                     ></textarea>
@@ -80,7 +80,7 @@ pub fn ContactPage() -> impl IntoView {
                 <button
                     type="submit"
                     disabled=move || is_submitting.get()
-                    class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors disabled:opacity-50"
+                    class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-primary disabled:opacity-50"
                 >
                     {move || if is_submitting.get() { "sending..." } else { "send" }}
                 </button>

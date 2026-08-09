@@ -4,14 +4,27 @@ use leptos::prelude::*;
 pub fn ExperiencePage() -> impl IntoView {
     view! {
         <div class="space-y-12">
-            <h1 class="text-xl font-bold tracking-tight text-white">"experiences"</h1>
+            <h1 class="page-title">"experiences"</h1>
 
             <div class="space-y-10">
                 <section class="space-y-6">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Work"</h2>
+                    <h2 class="section-heading">"Work"</h2>
                     <div class="space-y-8">
                         <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                                <h3 class="font-bold text-white">"Systems Engineer"</h3>
+                                <span class="text-xs font-mono text-gray-500">"Aug 2026 - Present"</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mb-2">"at Math.inc"</div>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-2">
+                                "Building distributed systems and internal infrastructure in Rust, from architecture through deployment."
+                            </p>
+                            <div class="text-[10px] font-mono text-gray-600">
+                                "[Rust, Go, Python]"
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Course Tester / Reviewer"</h3>
                                 <span class="text-xs font-mono text-gray-500">"Feb 2026 - Mar 2026"</span>
                             </div>
@@ -26,7 +39,7 @@ pub fn ExperiencePage() -> impl IntoView {
                             </div>
                         </div>
                         <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Watermill Maintainer"</h3>
                                 <span class="text-xs font-mono text-gray-500">"May 2026 - Present"</span>
                             </div>
@@ -41,7 +54,7 @@ pub fn ExperiencePage() -> impl IntoView {
                             </div>
                         </div>
                          <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Game Developer"</h3>
                                 <span class="text-xs font-mono text-gray-500">"Sep 2024 - Sep 2025"</span>
                             </div>
@@ -57,7 +70,7 @@ pub fn ExperiencePage() -> impl IntoView {
                         </div>
 
                          <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Telegram Bot Dev"</h3>
                                 <span class="text-xs font-mono text-gray-500">"Jul 2025 - Oct 2025"</span>
                             </div>
@@ -73,10 +86,10 @@ pub fn ExperiencePage() -> impl IntoView {
                 </section>
 
                 <section class="space-y-6">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">"Growth"</h2>
+                    <h2 class="section-heading">"Growth"</h2>
                     <div class="space-y-8">
                          <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Open Source"</h3>
                                 <span class="text-xs font-mono text-gray-500">"May 2023 - Present"</span>
                             </div>
@@ -89,7 +102,7 @@ pub fn ExperiencePage() -> impl IntoView {
                         </div>
 
                          <div class="group">
-                            <div class="flex justify-between items-baseline mb-1">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                                 <h3 class="font-bold text-white">"Self-Taught"</h3>
                                 <span class="text-xs font-mono text-gray-500">"2018 - Present"</span>
                             </div>

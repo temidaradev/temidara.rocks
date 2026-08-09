@@ -2,15 +2,14 @@ use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Deserialize, Serialize)]
-pub struct BlogInfo {
+pub struct ProjectInfo {
     pub title: String,
     pub text: String,
 }
 
 #[server(GetRepoReadme, "/api")]
 pub async fn get_repo_readme(path: String) -> Result<String, ServerFnError> {
-    let text = reqwest::get(path)
-        .await?;
+    let text = reqwest::get(path).await?;
 
     Ok(text.text().await?)
 }

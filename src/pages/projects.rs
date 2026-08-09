@@ -1,0 +1,342 @@
+use crate::api::projects::get_repo_readme;
+use crate::components::MandelbrotViewer;
+use leptos::prelude::*;
+use leptos_router::components::A;
+use leptos_router::hooks::use_params_map;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Project {
+    pub title: String,
+    pub date: String,
+    pub description: String,
+    pub slug: String,
+    pub readme_url: String,
+}
+
+pub fn get_projects() -> Vec<Project> {
+    vec![
+        Project {
+            title: "Kopuz".to_string(),
+            date: "2026.03.08".to_string(),
+            description: "A music player but written in rust".to_string(),
+            slug: "kopuz".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/kopuz/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "DeneyapA1V2 Bad Apple".to_string(),
+            date: "2026-01-21".to_string(),
+            description: "Bad Apple video player for ESP32 with SSD1306 OLED, utilising Heatshrink compression for efficient video storage.".to_string(),
+            slug: "deneyapa1v2-bad-apple".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/DeneyapA1V2-BadApple/master/README.md".to_string(),
+        },
+        Project {
+            title: "XMRig Dashboard".to_string(),
+            date: "2026-01-20".to_string(),
+            description: "A web-based dashboard for monitoring and controlling XMRig cryptocurrency miner, featuring real-time hashrate monitoring and live CPU control.".to_string(),
+            slug: "xmrig-dashboard".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/xmrig-dashboard/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "PiFan - Raspberry Pi 5 Fan Controller".to_string(),
+            date: "2026-01-17".to_string(),
+            description: "A modern GUI application to take full control of your Raspberry Pi 5's active cooler fan speed using hardware PWM.".to_string(),
+            slug: "pifan-controller".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/PiFan/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "Bad Apple on RP2350 (RISC-V)".to_string(),
+            date: "2026-01-14".to_string(),
+            description: "Playing the iconic 'Bad Apple' video on a Raspberry Pi Pico 2 (RP2350) using the RISC-V hazard3 cores and SSD1306.".to_string(),
+            slug: "bad-apple-rp2350".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/pico2-riscv-badapple/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "Mandelbrot-rust".to_string(),
+            date: "2026-01-03".to_string(),
+            description: "A Rust implementation of the Mandelbrot set".to_string(),
+            slug: "mandelbrot-rust".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/mandelbrot-rust/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "mdif".to_string(),
+            date: "2026-01-01".to_string(),
+            description: "A terminal-based disk usage analyzer written in Rust. It helps identify storage consumption with a clear and intuitive interface.".to_string(),
+            slug: "mdif".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/mdif/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "fastfetchus".to_string(),
+            date: "2025-12-14".to_string(),
+            description: "A custom system information fetching tool inspired by fastfetch/neofetch, designed for efficiency and aesthetics.".to_string(),
+            slug: "fastfetchus".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/fastfetchus/refs/heads/master/README.md".to_string(),
+        },
+        Project {
+            title: "NixOS".to_string(),
+            date: "2025-09-30".to_string(),
+            description: "A comprehensive NixOS configuration with Hyprland window manager, development tools, and reproducible system management".to_string(),
+            slug: "nixos".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/nixos/refs/heads/master/README.md".to_string(),
+        },
+         Project {
+            title: "NeuralRust".to_string(),
+            date: "2025-09-5".to_string(),
+            description: "A neural network implementation written in Rust, designed for learning and experimentation with machine learning concepts.".to_string(),
+            slug: "neuralrust".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/NeuralRust/refs/heads/master/README.md".to_string(),
+        },
+         Project {
+            title: "rust-p2p-chat".to_string(),
+            date: "2025-08-22".to_string(),
+            description: "A peer-to-peer chat application built with Rust.".to_string(),
+            slug: "rust-p2p-chat".to_string(),
+            readme_url: "https://raw.githubusercontent.com/temidaradev/rust-p2p-chat/refs/heads/main/README.md".to_string(),
+        },
+    ]
+}
+
+#[component]
+pub fn ProjectsPage() -> impl IntoView {
+    let projects = get_projects();
+
+    view! {
+        <div class="space-y-8">
+             <h1 class="page-title">"projects"</h1>
+
+            <div class="grid gap-6">
+                {projects.into_iter().map(|project| {
+                    view! {
+                         <article class="listing-row group relative">
+                            <div class="mb-1 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                                <a href=format!("/projects/{}", project.slug) class="font-bold text-gray-200 hover:text-white hover:underline">
+                                    {project.title}
+                                </a>
+                                <span class="text-xs font-mono text-gray-600">
+                                    {project.date}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 leading-snug line-clamp-2">
+                                {project.description}
+                            </p>
+                        </article>
+                    }
+                }).collect::<Vec<_>>()}
+            </div>
+        </div>
+    }
+}
+
+#[component]
+pub fn ProjectPage() -> impl IntoView {
+    let params = use_params_map();
+    let slug = move || params.get().get("slug").unwrap_or_default();
+
+    let post_resource = Resource::new(
+        move || slug(),
+        |slug| async move {
+            if let Some(project) = get_projects().into_iter().find(|p| p.slug == slug) {
+                let content = get_repo_readme(project.readme_url.clone())
+                    .await
+                    .unwrap_or_default();
+                let base = readme_base_url(&project.readme_url);
+                Some((project, content, base))
+            } else {
+                None
+            }
+        },
+    );
+
+    view! {
+        <Suspense fallback=move || view! { <div class="font-mono text-sm text-gray-500">"loading..."</div> }>
+            {move || match post_resource.get().flatten() {
+                Some((p, content, base)) => view! {
+                    <article class="max-w-none">
+                        <div class="mb-12 border-b border-white/10 pb-8">
+                            <A href="/projects" attr:class="no-underline text-xs font-mono text-gray-500 hover:text-white mb-6 block">
+                                "<- back"
+                            </A>
+                            <h1 class="text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
+                                {p.title.clone()}
+                            </h1>
+                            <time class="text-xs font-mono text-gray-500">{p.date}</time>
+                        </div>
+
+                        {if p.slug == "mandelbrot-rust" {
+                            view! { <MandelbrotViewer /> }.into_any()
+                        } else {
+                            view! { <></> }.into_any()
+                        }}
+
+                        <div class="blog-content text-gray-300 leading-relaxed" inner_html=md_to_html(&content, &base)>
+                        </div>
+                    </article>
+                }.into_any(),
+                None => view! {
+                    <div class="py-20 space-y-4">
+                        <h2 class="text-xl font-bold text-white">"404: project not found"</h2>
+                         <A href="/projects" attr:class="underline text-gray-400 hover:text-white">
+                            "return to projects"
+                        </A>
+                    </div>
+                }.into_any()
+            }}
+        </Suspense>
+    }
+}
+
+fn md_to_html(md: &str, base_url: &str) -> String {
+    use pulldown_cmark::{CowStr, Event, Options, Parser, Tag, TagEnd};
+
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    options.insert(Options::ENABLE_FOOTNOTES);
+    options.insert(Options::ENABLE_STRIKETHROUGH);
+    options.insert(Options::ENABLE_TASKLISTS);
+    options.insert(Options::ENABLE_SMART_PUNCTUATION);
+
+    let parser = Parser::new_ext(md, options);
+    let mut new_events = Vec::new();
+    let mut in_video_link = false;
+
+    for event in parser {
+        if in_video_link {
+            if let Event::End(TagEnd::Link) = event {
+                in_video_link = false;
+            }
+            continue;
+        }
+
+        let mut replaced = false;
+        match &event {
+            Event::Text(text) => {
+                if (text.starts_with("http://") || text.starts_with("https://"))
+                    && is_video_url(text)
+                {
+                    new_events.push(Event::Html(CowStr::from(video_player_html(text))));
+                    replaced = true;
+                }
+            }
+            Event::Start(Tag::Link { dest_url, .. }) => {
+                if is_video_url(dest_url) {
+                    new_events.push(Event::Html(CowStr::from(video_player_html(dest_url))));
+                    in_video_link = true;
+                    replaced = true;
+                }
+            }
+            Event::Start(Tag::Image {
+                link_type,
+                dest_url,
+                title,
+                id,
+            }) => {
+                let resolved = resolve_url(dest_url, base_url);
+                new_events.push(Event::Start(Tag::Image {
+                    link_type: *link_type,
+                    dest_url: CowStr::from(resolved),
+                    title: title.clone(),
+                    id: id.clone(),
+                }));
+                replaced = true;
+            }
+            Event::Html(html) | Event::InlineHtml(html) => {
+                let rewritten = rewrite_html_urls(html, base_url);
+                new_events.push(Event::Html(CowStr::from(rewritten)));
+                replaced = true;
+            }
+            _ => {}
+        }
+
+        if !replaced {
+            new_events.push(event);
+        }
+    }
+
+    let mut html_output = String::new();
+    pulldown_cmark::html::push_html(&mut html_output, new_events.into_iter());
+    html_output
+}
+
+fn readme_base_url(readme_url: &str) -> String {
+    match readme_url.rfind('/') {
+        Some(idx) => readme_url[..=idx].to_string(),
+        None => String::new(),
+    }
+}
+
+fn resolve_url(url: &str, base: &str) -> String {
+    let trimmed = url.trim();
+    if trimmed.is_empty()
+        || trimmed.starts_with("http://")
+        || trimmed.starts_with("https://")
+        || trimmed.starts_with("data:")
+        || trimmed.starts_with("mailto:")
+        || trimmed.starts_with('#')
+        || trimmed.starts_with("//")
+    {
+        return url.to_string();
+    }
+    if trimmed.starts_with('/') {
+        if let Some(scheme_end) = base.find("://") {
+            let rest = &base[scheme_end + 3..];
+            if let Some(slash) = rest.find('/') {
+                return format!("{}{}", &base[..scheme_end + 3 + slash], trimmed);
+            }
+            return format!("{}{}", base.trim_end_matches('/'), trimmed);
+        }
+    }
+    format!("{}{}", base, trimmed)
+}
+
+fn rewrite_html_urls(html: &str, base: &str) -> String {
+    let mut out = String::with_capacity(html.len());
+    let bytes = html.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        let rest = &html[i..];
+        let attr = if rest.starts_with("src=\"") || rest.starts_with("SRC=\"") {
+            Some(5)
+        } else if rest.starts_with("href=\"") || rest.starts_with("HREF=\"") {
+            Some(6)
+        } else {
+            None
+        };
+        if let Some(off) = attr {
+            let value_start = i + off;
+            if let Some(end_rel) = html[value_start..].find('"') {
+                let value_end = value_start + end_rel;
+                let value = &html[value_start..value_end];
+                out.push_str(&html[i..value_start]);
+                out.push_str(&resolve_url(value, base));
+                out.push('"');
+                i = value_end + 1;
+                continue;
+            }
+        }
+        let ch = html[i..].chars().next().unwrap();
+        out.push(ch);
+        i += ch.len_utf8();
+    }
+    out
+}
+
+fn is_video_url(url: &str) -> bool {
+    let lower = url.to_lowercase();
+    lower.ends_with(".mp4")
+        || lower.ends_with(".mov")
+        || lower.ends_with(".webm")
+        || lower.ends_with(".m4v")
+        || lower.contains("user-attachments/assets")
+}
+
+fn video_player_html(url: &str) -> String {
+    format!(
+        r#"<video controls playsinline preload="metadata" class="w-full rounded-lg border border-white/10 my-4 shadow-lg bg-black/50" style="max-height: 600px;">
+            <source src="{}" type="video/mp4">
+            <p class="text-sm text-gray-500 text-center py-2">
+                 Unable to play video. <a href="{}" class="text-blue-400 hover:underline" target="_blank">Download here</a>
+            </p>
+        </video>"#,
+        url, url
+    )
+}

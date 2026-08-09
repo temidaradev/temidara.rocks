@@ -13,13 +13,13 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <style>
-                    "body { background-color: #05050a; color: #e2e8f0; }"
+                    "body { background-color: #0b0d10; color: #e2e5e8; }"
                 </style>
                 <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500,600|outfit:400,500,600,700" rel="stylesheet" />
+                <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|jetbrains-mono:400,500,600" rel="stylesheet" />
                 {
                     // Live-reload client (development builds only). Mirrors the
                     // `#[cfg(debug_assertions)]`-gated /reload-events SSE endpoint
@@ -55,7 +55,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                     }
                 }
             </head>
-            <body class="bg-black text-white antialiased">
+            <body class="text-white antialiased">
                 <App/>
             </body>
         </html>
@@ -65,6 +65,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
+    provide_context(RwSignal::new(false));
 
     view! {
         <Stylesheet id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
@@ -72,20 +73,35 @@ pub fn App() -> impl IntoView {
         <Title text="temidaradev"/>
 
         <Router>
-            <div class="min-h-screen p-6 max-w-3xl mx-auto">
+            <div class="nix-field" aria-hidden="true">
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+                <img src="/nixos-logo.png" alt="" />
+            </div>
+            <div class="site-shell mx-auto min-h-screen max-w-4xl px-4 py-5 sm:px-8 sm:py-6">
                 <crate::components::navbar::NavBar />
 
-                <main class="py-8">
+                <main class="py-4">
                     <Routes fallback=|| "404 - Not Found".into_view()>
                         <Route path=StaticSegment("") view=crate::pages::HomePage/>
                         <Route path=StaticSegment("blog") view=crate::pages::BlogPage/>
                         <Route path=path!("blog/:slug") view=crate::pages::BlogPostPage/>
+                        <Route path=StaticSegment("projects") view=crate::pages::ProjectsPage/>
+                        <Route path=path!("projects/:slug") view=crate::pages::ProjectPage/>
                         <Route path=StaticSegment("experiences") view=crate::pages::ExperiencePage/>
+                        <Route path=StaticSegment("uses") view=crate::pages::UsesPage/>
+                        <Route path=StaticSegment("guestbook") view=crate::pages::GuestbookPage/>
+                        <Route path=path!("guestbook/moderate") view=crate::pages::GuestbookModerationPage/>
                         <Route path=StaticSegment("contact") view=crate::pages::ContactPage/>
                     </Routes>
                 </main>
 
                 <crate::components::footer::Footer />
+                <crate::components::CommandPalette />
             </div>
         </Router>
     }

@@ -1,11 +1,13 @@
 use leptos::prelude::*;
-use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
+use leptos_meta::{provide_meta_context, MetaTags, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
     path, StaticSegment,
 };
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
+    let stylesheet = format!("/pkg/temidaradev-rust.css?v={}", env!("ASSET_VERSION"));
+
     view! {
         <!DOCTYPE html>
         <html lang="en">
@@ -15,7 +17,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <style>
                     "body { background-color: #0b0d10; color: #e2e5e8; }"
                 </style>
-                <link rel="stylesheet" id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
+                <link rel="stylesheet" id="leptos" href=stylesheet/>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -68,8 +70,6 @@ pub fn App() -> impl IntoView {
     provide_context(RwSignal::new(false));
 
     view! {
-        <Stylesheet id="leptos" href="/pkg/temidaradev-rust.css?v=1"/>
-
         <Title text="temidaradev"/>
 
         <Router>

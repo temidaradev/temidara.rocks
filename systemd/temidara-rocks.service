@@ -1,0 +1,25 @@
+[Unit]
+Description=Temidara.rocks portfolio
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=temidaradev
+Group=temidaradev
+WorkingDirectory=/home/temidaradev/Projects/temidara.rocks/current
+EnvironmentFile=-/home/temidaradev/Projects/temidara.rocks/shared/portfolio.env
+ExecStart=/usr/bin/env \
+    LEPTOS_ENV=PROD \
+    LEPTOS_OUTPUT_NAME=temidaradev-rust \
+    LEPTOS_SITE_ROOT=site \
+    LEPTOS_SITE_PKG_DIR=pkg \
+    LEPTOS_SITE_ADDR=127.0.0.1:3006 \
+    GUESTBOOK_PATH=/home/temidaradev/Projects/temidara.rocks/shared/data/guestbook.json \
+    COVER_CACHE_DIR=/home/temidaradev/Projects/temidara.rocks/shared/data/covers \
+    /home/temidaradev/Projects/temidara.rocks/current/temidaradev-rust
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

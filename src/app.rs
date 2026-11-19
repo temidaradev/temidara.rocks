@@ -1,9 +1,12 @@
 use leptos::prelude::*;
-use leptos_meta::{provide_meta_context, MetaTags, Title};
+use leptos_meta::{provide_meta_context, Link, Meta, MetaTags, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
+    hooks::use_location,
     path, StaticSegment,
 };
+
+pub const SITE_URL: &str = "https://temidara.dev";
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     let stylesheet = format!("/pkg/temidaradev-rust.css?v={}", env!("ASSET_VERSION"));
@@ -70,9 +73,8 @@ pub fn App() -> impl IntoView {
     provide_context(RwSignal::new(false));
 
     view! {
-        <Title text="temidaradev"/>
-
         <Router>
+            <SiteMetadata />
             <div class="nix-field" aria-hidden="true">
                 <img src="/nixos-logo.png" alt="" />
                 <img src="/nixos-logo.png" alt="" />
@@ -104,5 +106,68 @@ pub fn App() -> impl IntoView {
                 <crate::components::CommandPalette />
             </div>
         </Router>
+    }
+}
+
+#[component]
+fn SiteMetadata() -> impl IntoView {
+    let pathname = use_location().pathname;
+    let page = Memo::new(move |_| {
+        let path = pathname.get();
+        let path = path.trim_end_matches('/');
+        let (title, description) = match path {
+            "" => (
+                "Systems engineer & student",
+                "I build distributed backends, embedded tools, and open-source software in Rust and Go.",
+            ),
+            "/projects" => ("Projects", "Open-source software, embedded experiments, and interactive demos."),
+            "/blog" => ("Blog", "Notes on systems programming, embedded hardware, and emulation."),
+            "/experiences" => ("Experience", "My work in systems engineering, Go, and open source."),
+            "/uses" => ("Uses", "The hardware, tools, and software I use."),
+            "/guestbook" => ("Guestbook", "Leave a message in my guestbook."),
+            "/contact" => ("Contact", "Get in touch with me."),
+            _ => {
+                if let Some(slug) = path.strip_prefix("/blog/") {
+                    if let Some(post) = crate::pages::blog::get_blog_posts()
+                        .into_iter()
+                        .find(|post| post.slug == slug)
+                    {
+                        return (post.title, post.description, format!("{SITE_URL}{path}"));
+                    }
+                }
+                if let Some(slug) = path.strip_prefix("/projects/") {
+                    if let Some(project) = crate::pages::projects::get_projects()
+                        .into_iter()
+                        .find(|project| project.slug == slug)
+                    {
+                        return (project.title, project.description, format!("{SITE_URL}{path}"));
+                    }
+                }
+                ("Portfolio", "Projects and writing by temidaradev.")
+            }
+        };
+        (
+            title.to_owned(),
+            description.to_owned(),
+            format!("{SITE_URL}{}", if path.is_empty() { "/" } else { path }),
+        )
+    });
+    let title = move || page.with(|(title, _, _)| format!("{title} · temidaradev"));
+    let description = move || page.with(|(_, description, _)| description.clone());
+    let canonical = move || page.with(|(_, _, canonical)| canonical.clone());
+    let is_kopuz_page = move || canonical() == format!("{SITE_URL}/projects/kopuz");
+
+    view! {
+        <Title text=title />
+        <Meta name="description" content=description />
+        {move || view! { <Link rel="canonical" href=canonical() /> }}
+        <Meta property="og:site_name" content="temidaradev" />
+        <Meta property="og:title" content=title />
+        <Meta property="og:description" content=description />
+        <Meta property="og:url" content=canonical />
+        <Show when=is_kopuz_page>
+            <Meta property="og:image" content=format!("{SITE_URL}/kopuz-home.jpg") />
+            <Meta name="twitter:card" content="summary_large_image" />
+        </Show>
     }
 }

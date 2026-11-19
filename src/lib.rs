@@ -1,7 +1,7 @@
 #![recursion_limit = "512"]
+pub mod api;
 pub mod app;
 pub mod components;
-pub mod api;
 pub mod pages;
 
 #[cfg(feature = "hydrate")]

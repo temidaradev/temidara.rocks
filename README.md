@@ -50,9 +50,8 @@ Blog files are embedded at build time, so rebuild the site after adding or
 editing a post.
 
 ### Prerequisites
-- Rust (latest stable)
-- `cargo-leptos` — `cargo install cargo-leptos`
-- The `wasm32-unknown-unknown` target — `rustup target add wasm32-unknown-unknown`
+- Rust via rustup. `rust-toolchain.toml` pins the toolchain and WebAssembly target.
+- `cargo-leptos` 0.3.6 — `cargo install --version 0.3.6 --locked cargo-leptos`
 
 ### Environment Variables
 
@@ -74,11 +73,14 @@ Create a `.env` file (loaded via `dotenvy` in SSR mode):
 
 ### Running Development Server
 ```bash
-cargo leptos watch
+LEPTOS_TAILWIND_VERSION=v3.4.19 cargo leptos watch
 ```
 The site is served at `http://127.0.0.1:3006`.
 
 ### Building for Release
 ```bash
-cargo leptos build --release
+bash scripts/build-release.sh
 ```
+
+See [homeserver deployment](DEPLOYMENT.md) for GitHub Actions setup, release
+activation, and migration of the existing service and its data.

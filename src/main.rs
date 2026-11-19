@@ -71,6 +71,48 @@ async fn blog_asset(
     }
 }
 
+#[cfg(feature = "ssr")]
+async fn sitemap() -> impl axum::response::IntoResponse {
+    use std::fmt::Write as _;
+    use temidaradev_rust::pages::{blog::get_blog_posts, projects::get_projects};
+
+    let pages = [
+        "/",
+        "/projects",
+        "/blog",
+        "/experiences",
+        "/uses",
+        "/guestbook",
+        "/contact",
+    ];
+    let paths = pages
+        .into_iter()
+        .map(str::to_owned)
+        .chain(
+            get_blog_posts()
+                .into_iter()
+                .map(|post| format!("/blog/{}", urlencoding::encode(&post.slug))),
+        )
+        .chain(
+            get_projects()
+                .into_iter()
+                .map(|project| format!("/projects/{}", urlencoding::encode(&project.slug))),
+        );
+    let mut xml = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+    for path in paths {
+        let _ = writeln!(xml, "  <url><loc>{SITE_URL}{path}</loc></url>");
+    }
+    xml.push_str("</urlset>\n");
+
+    (
+        [(
+            axum::http::header::CONTENT_TYPE,
+            "application/xml; charset=utf-8",
+        )],
+        xml,
+    )
+}
+
 #[cfg(all(feature = "ssr", debug_assertions))]
 async fn sse_handler(
     axum::Extension(tx): axum::Extension<tokio::sync::broadcast::Sender<String>>,
@@ -104,6 +146,7 @@ async fn main() {
         .route("/api/{*fn_name}", post(leptos_axum::handle_server_fns))
         .route("/cover-cache/{file}", get(cached_cover))
         .route("/blog-assets/{*file}", get(blog_asset))
+        .route("/sitemap.xml", get(sitemap))
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())

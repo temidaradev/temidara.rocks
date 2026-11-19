@@ -12,11 +12,11 @@ pub fn NavBar() -> impl IntoView {
                 <span>"temidaradev"</span>
             </a>
 
-            <nav class="site-nav flex gap-x-5 text-[11px] font-bold uppercase tracking-wider text-gray-600">
+            <nav aria-label="Main navigation" class="site-nav flex gap-x-4 text-xs font-medium text-muted">
                 <A href="/" exact=true attr:class="hover:text-white">"Index"</A>
                 <A href="/blog" attr:class="hover:text-white">"Blog"</A>
                 <A href="/projects" attr:class="hover:text-white">"Projects"</A>
-                <A href="/experiences" attr:class="hover:text-white">"Exp"</A>
+                <A href="/experiences" attr:class="hover:text-white">"Experience"</A>
                 <A href="/uses" attr:class="hover:text-white">"Uses"</A>
                 <A href="/guestbook" attr:class="hover:text-white">"Guestbook"</A>
                 <A href="/contact" attr:class="hover:text-white">"Contact"</A>
@@ -24,7 +24,8 @@ pub fn NavBar() -> impl IntoView {
 
             <button
                 type="button"
-                class="font-mono text-[10px] uppercase tracking-wider text-gray-600 hover:text-white"
+                aria-label="Search the site"
+                class="min-h-8 font-mono text-xs text-muted hover:text-white"
                 on:click=move |_| command_palette_open.set(true)
             >
                 "Search /"

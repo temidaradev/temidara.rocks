@@ -7,7 +7,7 @@ pub fn HomePage() -> impl IntoView {
     Effect::new(move |_| {
         let handle = set_interval_with_handle(
             move || set_trigger.update(|n| *n += 1),
-            std::time::Duration::from_secs(2),
+            std::time::Duration::from_secs(15),
         )
         .ok();
 
@@ -65,6 +65,8 @@ pub fn HomePage() -> impl IntoView {
             }
         }
     });
+
+    let latest_post = crate::pages::blog::get_blog_posts().into_iter().next();
 
     view! {
         <div class="space-y-12">
@@ -158,13 +160,13 @@ pub fn HomePage() -> impl IntoView {
             <section class="space-y-4">
                 <h2 class="section-heading">"Projects"</h2>
                 <div class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
-                    <a href="https://github.com/temidaradev/kopuz" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
+                    <a href="https://kopuz.moe/" target="_blank" rel="noopener noreferrer" class="project-row group block py-3">
                         <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                             <span class="flex items-center gap-2 font-medium text-white group-hover:underline">
                                 "Kopuz"
                                 <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
                             </span>
-                            <span class="font-mono text-[9px] text-gray-700">"rust / github ↗"</span>
+                            <span class="font-mono text-[9px] text-gray-700">"rust / kopuz.moe ↗"</span>
                         </div>
                         <p class="mt-1 text-sm text-gray-500">"Music player, but written in Rust."</p>
                     </a>
@@ -196,14 +198,23 @@ pub fn HomePage() -> impl IntoView {
                 <a href="/projects" class="inline-block font-mono text-[10px] text-gray-600 hover:text-white">"all projects ->"</a>
             </section>
 
+            {latest_post.map(|post| view! {
+                <section class="space-y-3" aria-labelledby="home-writing">
+                    <h2 id="home-writing" class="section-heading">"Writing"</h2>
+                    <a href=format!("/blog/{}", post.slug) class="block text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white">
+                        {post.title}
+                    </a>
+                </section>
+            })}
+
             <crate::components::StatusSection />
 
             <section class="space-y-4">
                 <h2 class="section-heading">"Socials"</h2>
                 <div class="flex flex-wrap gap-4 text-sm font-mono text-gray-400">
                     <a href="mailto:temidaradev@temidara.rocks" class="hover:text-white hover:underline">"email"</a>
-                    <a href="https://github.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"github"</a>
-                    <a href="https://x.com/temidaradev" target="_blank" class="hover:text-white hover:underline">"twitter"</a>
+                    <a href="https://github.com/temidaradev" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline">"github"</a>
+                    <a href="https://x.com/temidaradev" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline">"twitter"</a>
                 </div>
             </section>
 
@@ -213,41 +224,44 @@ pub fn HomePage() -> impl IntoView {
                     <p class="mt-1 text-xs text-gray-700">"small pieces of the web I like"</p>
                 </div>
                 <div class="button-shelf flex flex-wrap gap-1">
+                    <a href="https://kopuz.moe/" target="_blank" rel="noopener noreferrer">
+                        <img src="/kopuz-88x31.png" width="88" height="31" loading="lazy" alt="Kopuz" />
+                    </a>
                     <a href="https://rust-lang.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cyber.dabamos.de/88x31/botao.gif" height="31" />
+                        <img src="https://cyber.dabamos.de/88x31/botao.gif" width="88" height="31" loading="lazy" alt="Rust" />
                     </a>
                     <a href="https://www.qbittorrent.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://meltingsnow.neocities.org/images/88x31piracy.gif" height="31" />
+                        <img src="https://meltingsnow.neocities.org/images/88x31piracy.gif" width="88" height="31" loading="lazy" alt="qBittorrent" />
                     </a>
                     <a href="https://github.com/temidaradev" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cyber.dabamos.de/88x31/github.gif" height="31" />
+                        <img src="https://cyber.dabamos.de/88x31/github.gif" width="88" height="31" loading="lazy" alt="GitHub" />
                     </a>
                     <a href="https://88x31.nl/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://88x31.nl/gifs/nicesite.png" height="31" />
+                        <img src="https://88x31.nl/gifs/nicesite.png" width="88" height="31" loading="lazy" alt="88x31.nl" />
                     </a>
                     <a href="https://nixos.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://images.melonland.net/?url=https%3A%2F%2Fcrazyroostereye.de%2Fstuff%2Fnixos.png&w=1200&fit=inside&we&q=85&il&n=-1&default=1" height="31" />
+                        <img src="https://images.melonland.net/?url=https%3A%2F%2Fcrazyroostereye.de%2Fstuff%2Fnixos.png&w=1200&fit=inside&we&q=85&il&n=-1&default=1" width="88" height="31" loading="lazy" alt="NixOS" />
                     </a>
-                    <img src="https://2k2pea.ch/88x31/nixos.gif" height="31" />
+                    <img src="https://2k2pea.ch/88x31/nixos.gif" width="88" height="31" loading="lazy" alt="" />
                     <a href="https://duckduckgo.com/?q=hatsune+miku&ia=web" target="_blank" rel="noopener noreferrer">
-                        <img src="https://chronocide.neocities.org/assets/88x31/miku.gif" height="31" />
+                        <img src="https://chronocide.neocities.org/assets/88x31/miku.gif" width="88" height="31" loading="lazy" alt="Hatsune Miku" />
                     </a>
                     <a href="https://duckduckgo.com/?q=kasane+teto&ia=web" target="_blank" rel="noopener noreferrer">
-                        <img src="https://meltingsnow.neocities.org/images/tb_teto.gif" height="31" />
+                        <img src="https://meltingsnow.neocities.org/images/tb_teto.gif" width="88" height="31" loading="lazy" alt="Kasane Teto" />
                     </a>
                     <a href="http://www.slsknet.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cyber.dabamos.de/88x31/soulseek.gif" height="31" />
+                        <img src="https://cyber.dabamos.de/88x31/soulseek.gif" width="88" height="31" loading="lazy" alt="Soulseek" />
                     </a>
-                    <img src="https://88x31.nl/gifs/168.gif" height="31" />
-                    <img src="https://88x31.nl/gifs/blends.gif" height="31" />
-                    <img src="https://88x31.nl/gifs/caramelldansen.gif" height="31" />
-                    <img src="https://88x31.nl/gifs/ralseismokingadart.gif" height="31" />
-                    <img src="https://88x31.nl/gifs/verine.gif" height="31" />
-                    <img src="https://capstasher.neocities.org/88x31Buttons/dramaturgie.gif" height="31" />
-                    <img src="https://capstasher.neocities.org/88x31Buttons/hekate.gif" height="31" />
-                    <img src="https://capstasher.neocities.org/88x31Buttons/j04q1x.png" height="31" />
-                    <img src="https://capstasher.neocities.org/88x31Buttons/nyaabanner.gif" height="31" />
-                    <img src="https://capstasher.neocities.org/88x31Buttons/vocaloid.gif" height="31" />
+                    <img src="https://88x31.nl/gifs/168.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://88x31.nl/gifs/blends.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://88x31.nl/gifs/caramelldansen.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://88x31.nl/gifs/ralseismokingadart.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://88x31.nl/gifs/verine.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/dramaturgie.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/hekate.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/j04q1x.png" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/nyaabanner.gif" width="88" height="31" loading="lazy" alt="" />
+                    <img src="https://capstasher.neocities.org/88x31Buttons/vocaloid.gif" width="88" height="31" loading="lazy" alt="" />
                 </div>
             </section>
         </div>

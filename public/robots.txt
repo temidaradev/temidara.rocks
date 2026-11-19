@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /guestbook/moderate
+Sitemap: https://temidara.dev/sitemap.xml

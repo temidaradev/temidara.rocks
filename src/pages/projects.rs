@@ -19,9 +19,9 @@ pub fn get_projects() -> Vec<Project> {
         Project {
             title: "Kopuz".to_string(),
             date: "2026.03.08".to_string(),
-            description: "A music player but written in rust".to_string(),
+            description: "A cross-platform Rust music player for local libraries and connected music services.".to_string(),
             slug: "kopuz".to_string(),
-            readme_url: "https://raw.githubusercontent.com/temidaradev/kopuz/refs/heads/master/README.md".to_string(),
+            readme_url: "https://raw.githubusercontent.com/Kopuz-org/kopuz/HEAD/README.md".to_string(),
         },
         Project {
             title: "DeneyapA1V2 Bad Apple".to_string(),

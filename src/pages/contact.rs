@@ -1,7 +1,5 @@
 use leptos::prelude::*;
 
-
-
 #[component]
 pub fn ContactPage() -> impl IntoView {
     let (name, set_name) = signal(String::new());
@@ -18,7 +16,7 @@ pub fn ContactPage() -> impl IntoView {
         let n = name.get();
         let e = email.get();
         let m = message.get();
-        
+
         leptos::task::spawn_local(async move {
             match crate::api::contact::send_contact_email(n, e, m).await {
                 Ok(_) => {
@@ -27,7 +25,7 @@ pub fn ContactPage() -> impl IntoView {
                     set_name.set(String::new());
                     set_email.set(String::new());
                     set_message.set(String::new());
-                },
+                }
                 Err(err) => {
                     leptos::logging::error!("Failed to send email: {}", err);
                     set_is_submitting.set(false);
@@ -103,7 +101,7 @@ pub fn ContactPage() -> impl IntoView {
                     })
                 }}
             </form>
-            
+
             <div class="pt-8 border-t border-white/10">
                 <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">"socials"</h2>
                 <ul class="space-y-2 text-sm text-gray-400">
